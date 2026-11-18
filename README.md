@@ -26,16 +26,9 @@ The Business Health Check uses a 0–3 practice-adoption scale. Its score descri
 ## Current website and tools
 
 - Responsive bilingual landing page (RU / EN).
-- Business Health Check across six resilience dimensions.
-- Financial Stability Planner: net monthly cash flow, cash runway and break-even units.
-- Marketing Performance Calculator: CAC, conversion rate, average order value and ROAS.
-- Market Validation Check.
-- Risk Priority Matrix.
-- Operational Resilience Check.
-- Business Adaptability Check.
-- 90-Day Action Plan.
+- Eight functional browser-based tools.
 - Local browser storage for language preference and latest result per tool.
-- Optional aggregate analytics adapter supports all eight tools but remains disabled until a suitable provider is reviewed.
+- Supabase aggregate counters for page loads, tool starts and completions; no visitor-level records or personal tool data.
 
 ## Calculation notes
 
@@ -51,9 +44,9 @@ These are simplified educational indicators, not accounting, tax, legal, investm
 
 ## Privacy and technology
 
-No registration, phone numbers, accounts or central storage of user results. Tool answers, inputs, notes and calculated outputs are processed in the browser and saved locally on the visitor's device. They are not sent to a YOUNOVAL application backend and are not visible to the project owner.
+No registration, phone numbers, accounts or central storage of user results. Tool answers, inputs, notes and calculated outputs are processed in the browser and saved locally on the visitor's device. They are not sent to YOUNOVAL's application database and are not visible to the project owner.
 
-The planned owner statistics are aggregate counts only: visits, tool opens and completions by tool and period. They must not include answers, financial inputs, notes, user IDs or visitor-level histories. The analytics adapter is disabled by default. Website hosting may process technical connection data in its logs; the operator must verify actual provider practices before making absolute no-data-collection claims.
+The Supabase database stores aggregate counts only: page loads, tool opens and completions by UTC date and fixed tool ID. It does not store user IDs, sessions, answers, financial inputs, notes or individual result histories. The static-site host and Supabase may process technical connection data in infrastructure/security logs; the operator must verify provider practices and applicable privacy requirements.
 
 ## Run locally
 
@@ -61,7 +54,7 @@ Open index.html in a modern browser, or serve this folder with any static web se
 
 ## Deployment
 
-The project is deployed as a static site. No application backend or database is required for the tools to work.
+The public project is deployed as a static site. Supabase is used only for aggregate usage counters; no application accounts or user-results backend is required.
 
 ## Research integrity
 
@@ -72,8 +65,9 @@ YOUNOVAL distinguishes published findings and official statistics from working h
 - [x] Bilingual responsive website
 - [x] Eight functional browser-based tools
 - [x] Local storage for latest results per tool
-- [x] Analytics adapter allowlist for all eight tools (provider disabled)
-- [ ] Privacy-reviewed aggregate counter and private owner-only statistics view
+- [x] Supabase aggregate counter for page views, tool starts and completions
+- [x] Private aggregate statistics notebook in Supabase
+- [ ] Review hosting/provider logging and finalize privacy notice
 - [ ] Exportable personal report generated locally in the visitor's browser
 
 The YOUNOVAL name is provisional; trademark and domain availability have not been cleared.
