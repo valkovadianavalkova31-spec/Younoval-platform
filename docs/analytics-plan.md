@@ -27,12 +27,13 @@ There are no event rows per visitor, user IDs, session IDs, cookies, answers, fi
 - `tool_started`: the visitor selects a tool in the workspace.
 - `tool_completed`: a tool calculates or generates a result.
 
-Counts are not unique visitors. Repeated visits and repeated tool use increase the counters. Completion/open ratios are aggregate indicators, not person-level conversion rates.
+Counts are not unique visitors. Repeated visits and repeated tool use increase the counters. Automated or forged requests can also inflate them, so these are indicative descriptive metrics, not an exact audience count. Completion/open ratios are aggregate indicators, not person-level conversion rates.
 
 ## Technical implementation
 
 - `analytics.js` sends only fixed event names and tool IDs to the YOUNOVAL Supabase Edge Function.
-- The Edge Function checks the allowed origin, HTTP method, event name and tool ID.
+- The Edge Function checks the allowed origin, HTTP method, event name and tool ID. The origin allowlist is a browser CORS control, not strong authentication: non-browser clients can forge an Origin header.
+- The counter endpoint is intentionally public and does not use visitor IDs or IP-based rate limiting. As a result, automated traffic can inflate counts; do not interpret them as verified unique users.
 - A server-side Supabase credential writes through a restricted database function.
 - The counter table has RLS enabled and no access policies for public or signed-in browser roles. Direct client reads and writes are not granted.
 - Tool answers and result payloads are never sent to the function.
