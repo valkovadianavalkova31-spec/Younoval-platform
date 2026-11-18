@@ -1,71 +1,51 @@
-# YOUNOVAL — privacy-first analytics plan
+# YOUNOVAL — privacy-first aggregate analytics
 
-**Status: prepared in code, disabled by default. No analytics provider is currently connected.**
+**Status: connected to the project's Supabase database and Edge Function.** The implementation records aggregate counters only; it does not identify visitors.
 
-## Research questions the analytics should answer
+## Project principles
 
-1. How many page views does the public site receive?
-2. Which available tools are opened most often?
-3. How often is each tool completed after it is opened?
-4. Does usage change after a tool or explanation is improved?
+- No registration, phone numbers, accounts or user profiles.
+- Tool answers, inputs, notes and calculated results stay in the visitor's browser.
+- YOUNOVAL does not receive or centrally store individual tool results.
+- The project owner sees aggregate counts only.
 
-These metrics describe platform usage. They do not prove that a user is a unique person, that the tool improved a business, or that the YBRM model predicts business survival.
+## Stored data
 
-## Minimal event schema
+The browser stores the selected language and the latest result for each tool in local storage. These values remain on that device/browser and are not synchronized.
 
-Only these events are planned:
+The Supabase table `public.younoval_daily_counts` stores only:
+- UTC date;
+- fixed event name: `page_view`, `tool_started`, or `tool_completed`;
+- one of the eight fixed tool IDs for tool events (no tool ID for page views);
+- an integer aggregate count and update timestamp.
 
-| Event | When | Allowed properties |
-|---|---|---|
-| Page view | GoatCounter page-view counter | Standard page path |
-| tool_started | A visitor opens one of the available tools | Fixed tool ID: health, finance, marketing |
-| tool_completed | A visitor successfully calculates a result | Fixed tool ID: health, finance, marketing |
+There are no event rows per visitor, user IDs, session IDs, cookies, answers, financial inputs, calculated values, free-text notes, phone numbers or email addresses.
 
-No custom payloads are sent. Tool answers, financial inputs, calculated values, result text, free text, phone numbers, email addresses, IP addresses and device fingerprints are never included in custom events.
+## Event definitions and limitations
 
-Completion rate is calculated from aggregate event counts: completions divided by starts for the same tool and period. Because no visitor/session identifier is retained in our event names, this is an aggregate ratio, not a person-level funnel. Repeated use can make the ratio exceed or differ from a true per-person completion rate.
+- `page_view`: a page load of the public website.
+- `tool_started`: the visitor selects a tool in the workspace.
+- `tool_completed`: a tool calculates or generates a result.
 
-## Free provider candidate
+Counts are not unique visitors. Repeated visits and repeated tool use increase the counters. Completion/open ratios are aggregate indicators, not person-level conversion rates.
 
-GoatCounter offers a hosted service free for reasonable public usage and supports custom events. Its documentation says it stores aggregate statistics by hour/day and does not persist IP addresses or full User-Agent headers in its normal aggregate mode. It does process IP + User-Agent transiently in memory (up to eight hours) to estimate repeat visits; derived country/browser/screen/language statistics can be stored unless disabled. Its hosted service is operated from Ireland and stores data on Hetzner servers in Finland and Germany. An owner email is required for the GoatCounter account.
+## Technical implementation
 
-Official documentation:
-- https://www.goatcounter.com/help/events
-- https://www.goatcounter.com/help/privacy
-- https://www.goatcounter.com/help/terms
+- `analytics.js` sends only fixed event names and tool IDs to the YOUNOVAL Supabase Edge Function.
+- The Edge Function checks the allowed origin, HTTP method, event name and tool ID.
+- A server-side Supabase credential writes through a restricted database function.
+- The counter table has RLS enabled and no access policies for public or signed-in browser roles. Direct client reads and writes are not granted.
+- Tool answers and result payloads are never sent to the function.
+- A private Supabase SQL notebook provides project members with aggregate reports only.
 
-**Important:** this provider is only a candidate. It is not connected. External processing and the provider's data locations must be reviewed against the project's legal obligations and intended Russian audience before activation. Do not describe the project as collecting absolutely no data while a third-party analytics provider is enabled.
+## Owner statistics
 
-## Current implementation
+Open the private [YOUNOVAL aggregate usage notebook](https://supabase.com/dashboard/project/mtnmsjftexummebtpyop/explorer/notebook/66d6ed99-7236-40a8-a115-c39f4b5c92aa) in the Supabase project. It contains daily totals, totals by tool, and daily tool usage. Access is governed by Supabase project membership; do not make the notebook public or share it outside the project.
 
-- `analytics.js` is a small optional adapter.
-- It is disabled unless `window.YN_ANALYTICS_ENDPOINT` is set before the adapter loads.
-- No provider script is requested when the endpoint is empty.
-- The adapter accepts only two event names and three fixed tool IDs.
-- The application never sends tool answers, inputs or calculated results to analytics.
-- Tool results continue to be stored locally in the visitor's browser under the existing local-storage implementation.
+## Technical privacy caveat
 
-## Dashboard access — owner only
+The counter endpoint receives network requests. Supabase and the static-site host may process technical connection metadata, including IP addresses, in security and infrastructure logs. The aggregate table itself does not store IP addresses or visitor identifiers. The operator must review provider logging, retention, data locations and applicable Russian privacy/localization requirements before making legal claims.
 
-The analytics dashboard must remain private:
+## Research integrity
 
-- Set GoatCounter **Dashboard viewable by** to **logged in users only** (not public and not secret-token access).
-- Use only the project owner's individual account; do not invite other users.
-- Do not embed the dashboard in YOUNOVAL, add a public statistics page, publish a dashboard link, or place an API token in frontend code.
-- If a private dashboard is later built into a separate owner-only area, it must use a server-side secret and real authentication; never expose a read-statistics token in browser JavaScript.
-
-The current public website contains no analytics dashboard. Visitors cannot view the owner's statistics.
-
-## Activation checklist
-
-1. Create the project owner's GoatCounter site and review its current terms/privacy settings. Keep dashboard visibility set to **logged in users only** and do not add other accounts.
-2. Disable individual pageview storage and any unnecessary dimensions (location, browser/system, screen width and language) where the dashboard permits.
-3. Confirm whether the provider's transient processing and Finland/Germany storage are acceptable for the project's actual operator, audience and applicable law. If not, leave analytics disabled and use a Russian-hosted solution only after legal review.
-4. Add the site's `/count` endpoint to `window.YN_ANALYTICS_ENDPOINT`.
-5. Test page views and the two event types using non-real test traffic.
-6. Publish a concise analytics/privacy notice before enabling collection.
-7. Periodically export aggregate reports for the research log; never publish raw event logs.
-
-## What can be measured before activation
-
-The website can be used and tool results can be saved locally without any central analytics. Without a connected analytics provider, the owner cannot see cross-visitor totals. Browser-local counters would only describe activity on that one device and must not be presented as total site usage.
+Counts describe website and tool usage, not business outcomes. They cannot show that YOUNOVAL improved a business or that the YBRM model predicts business survival. Report them as aggregate descriptive statistics with the observation period and limitations.

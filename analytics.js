@@ -1,53 +1,46 @@
 /*
- * YOUNOVAL privacy-first analytics adapter.
- *
- * Disabled by default. To enable after reviewing the provider's terms and
- * applicable privacy/localization requirements, set
- * window.YN_ANALYTICS_ENDPOINT to the site's GoatCounter /count endpoint
- * before this file loads (see docs/analytics-plan.md).
- *
- * Only allow-listed event names and tool IDs are sent. Never send answers,
- * calculated values, free text, phone/email, IP, or device identifiers.
+ * YOUNOVAL aggregate analytics.
+ * Sends only fixed event names and fixed tool IDs to our Supabase Edge Function.
+ * No answers, amounts, notes, user IDs, cookies or device identifiers are sent.
+ * Supabase receives a network request and may process technical connection data.
  */
 (() => {
-  const endpoint = window.YN_ANALYTICS_ENDPOINT || "";
+  const endpoint = "https://mtnmsjftexummebtpyop.supabase.co/functions/v1/younoval-track";
+  const publishableKey = "sb_publishable_Vr43cig07d8hFTKpt71S3w_OxU-Z7YS";
+  // Legacy anon JWT is a public client credential; it carries no privileged access.
+  const anonJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10bm1zamZ0ZXh1bW1lYnRweW9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUwMzE1OTQsImV4cCI6MjExMDYwNzU5NH0.naSluubZ-hDHkKY5HlCUn1G5mp7TE8LCfTShwrAg4Xo";
   const allowedEvents = new Set(["tool_started", "tool_completed"]);
-  const allowedTools = new Set(["health", "finance", "marketing"]);
-  const queue = [];
+  const allowedTools = new Set([
+    "health", "finance", "marketing", "market",
+    "risk", "operations", "adapt", "plan"
+  ]);
 
-  const send = (eventName, toolId) => {
-    if (!allowedEvents.has(eventName) || !allowedTools.has(toolId)) return;
-    const count = window.goatcounter && window.goatcounter.count;
-    if (typeof count !== "function") {
-      queue.push([eventName, toolId]);
+  const send = (event, tool = null) => {
+    if (event === "page_view") {
+      tool = null;
+    } else if (!allowedEvents.has(event) || !allowedTools.has(tool)) {
       return;
     }
-    count({
-      path: "event-" + eventName + "-" + toolId,
-      title: eventName + " " + toolId,
-      event: true,
-      no_session: true
-    });
+
+    fetch(endpoint, {
+      method: "POST",
+      mode: "cors",
+      keepalive: true,
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": publishableKey,
+        "Authorization": "Bearer " + anonJwt
+      },
+      body: JSON.stringify({ event: event, tool: tool })
+    }).catch(() => {});
   };
 
   window.YNAnalytics = {
-    enabled: Boolean(endpoint),
-    track(eventName, toolId) {
-      if (endpoint) send(eventName, toolId);
+    enabled: true,
+    track(event, tool) {
+      send(event, tool);
     }
   };
 
-  if (!endpoint) return;
-
-  const script = document.createElement("script");
-  script.async = true;
-  script.src = "https://gc.zgo.at/count.js";
-  script.dataset.goatcounter = endpoint;
-  script.onload = () => {
-    while (queue.length) {
-      const [eventName, toolId] = queue.shift();
-      send(eventName, toolId);
-    }
-  };
-  document.head.appendChild(script);
+  send("page_view");
 })();

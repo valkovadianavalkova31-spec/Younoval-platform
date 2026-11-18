@@ -1,11 +1,19 @@
-# YOUNOVAL — analytics and privacy notice (draft)
+# YOUNOVAL — privacy notice (draft)
 
-YOUNOVAL's public tools do not require visitors to create an account. Tool inputs and results are stored in the visitor's own browser using local storage and are not sent to the YOUNOVAL application backend.
+YOUNOVAL's tools are free and do not require registration. Visitors do not provide a phone number, create an account or upload their results.
 
-The website's optional analytics integration is disabled by default. If analytics is enabled in a future release, it is intended to count page views and fixed tool-use events only. It must not send questionnaire answers, financial inputs, calculated results, free text, phone numbers, email addresses or device fingerprints.
+## Tool answers and results
 
-A third-party analytics provider may process technical connection information to provide aggregate statistics. The provider, data categories, purposes, retention and any international data transfers must be identified in the final notice before activation. Until that review and notice are complete, keep analytics disabled.
+Tool inputs, answers, notes and calculated results are processed in the visitor's browser. The latest results are saved in that browser's local storage so the visitor can return to them on the same device and browser. They are not sent to YOUNOVAL's application database and are not visible to the project owner.
 
-Visitors should avoid entering confidential business information, personal data about customers or employees, credentials, payment-card details or government identifiers into the tools. Clearing saved results in the interface removes the YOUNOVAL tool-results entry from that browser's local storage.
+Please do not enter confidential business information, personal data about customers or employees, credentials, payment-card details or government identifiers.
 
-This is a technical draft, not a final legal document. The operator must verify hosting logs, fonts and other third-party resources, and applicable Russian personal-data and other privacy requirements before publication.
+## Aggregate usage statistics
+
+YOUNOVAL records aggregate counts of page loads, tool opens and tool completions. The stored statistics contain the UTC date, a fixed event type, a fixed tool identifier where relevant, and an aggregate count. They do not contain individual visitor records, user IDs, session IDs, questionnaire answers, financial inputs, notes or calculated results. The counts do not represent unique people.
+
+## Technical connection data
+
+The website host and Supabase may process technical connection information, such as IP addresses, in infrastructure and security logs to deliver and protect the service. Such technical processing is separate from the aggregate statistics table. The operator must confirm provider logging, retention, data locations and applicable Russian personal-data requirements before treating this draft as a final legal notice.
+
+This is a technical draft, not final legal advice. The project operator should review applicable Russian personal-data and other privacy requirements, hosting logs and third-party resources before publication.

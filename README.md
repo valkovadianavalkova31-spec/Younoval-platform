@@ -2,7 +2,7 @@
 
 A bilingual (Russian / English), research-informed educational project focused on strengthening youth entrepreneurship in Russia.
 
-**100% free. No registration.** Calculations run in the browser; the latest results are stored locally on the visitor's device.
+**All eight tools are free and available without registration.** Tool calculations run in the visitor's browser. The latest result for each tool is saved locally in that browser; YOUNOVAL does not receive or centrally store individual answers or results.
 
 ## Research purpose
 
@@ -23,15 +23,12 @@ The Youth Business Resilience Model (YBRM) is a preliminary author-designed fram
 
 The Business Health Check uses a 0–3 practice-adoption scale. Its score describes the practices selected by a user. It is **not a validated predictive model**, does not estimate the probability of business closure, and must not be interpreted as a measure of survival likelihood. No empirical validation or causal effect is claimed.
 
-## Current website
+## Current website and tools
 
 - Responsive bilingual landing page (RU / EN).
-- Business Health Check across six resilience dimensions.
-- Financial Stability Planner: net monthly cash flow, cash runway and break-even units.
-- Marketing Performance Calculator: CAC, conversion rate, average order value and ROAS.
-- Local storage for language preference and latest tool results.
-
-Planned: Market Validation Check, Risk & Recovery Guide, Operational Resilience Check, Business Adaptability Check and 90-Day Action Plan.
+- Eight functional browser-based tools.
+- Local browser storage for language preference and latest result per tool.
+- Supabase aggregate counters for page loads, tool starts and completions; no visitor-level records or personal tool data.
 
 ## Calculation notes
 
@@ -47,7 +44,9 @@ These are simplified educational indicators, not accounting, tax, legal, investm
 
 ## Privacy and technology
 
-This is a static HTML, CSS and JavaScript project. No backend, account system, analytics service or paid API is required. The language choice and latest results use browser local storage. Clearing browser site data removes those values. Calculator inputs are processed in the browser and are not intentionally sent to a server.
+No registration, phone numbers, accounts or central storage of user results. Tool answers, inputs, notes and calculated outputs are processed in the browser and saved locally on the visitor's device. They are not sent to YOUNOVAL's application database and are not visible to the project owner.
+
+The Supabase database stores aggregate counts only: page loads, tool opens and completions by UTC date and fixed tool ID. It does not store user IDs, sessions, answers, financial inputs, notes or individual result histories. The static-site host and Supabase may process technical connection data in infrastructure/security logs; the operator must verify provider practices and applicable privacy requirements.
 
 ## Run locally
 
@@ -55,7 +54,7 @@ Open index.html in a modern browser, or serve this folder with any static web se
 
 ## Deployment
 
-The static project can be deployed using GitHub Pages or Cloudflare Pages within their applicable free tiers. Use the repository root as the output directory; no build command is needed.
+The public project is deployed as a static site. Supabase is used only for aggregate usage counters; no application accounts or user-results backend is required.
 
 ## Research integrity
 
@@ -64,14 +63,11 @@ YOUNOVAL distinguishes published findings and official statistics from working h
 ## Roadmap
 
 - [x] Bilingual responsive website
-- [x] Business Health Check
-- [x] Financial Stability Planner
-- [x] Marketing Performance Calculator
-- [ ] Market Validation Check
-- [ ] Risk & Recovery Guide
-- [ ] Operational Resilience Check
-- [ ] Business Adaptability Check
-- [ ] Unified analysis dashboard and 90-day action plan
-- [ ] Exportable personal report
+- [x] Eight functional browser-based tools
+- [x] Local storage for latest results per tool
+- [x] Supabase aggregate counter for page views, tool starts and completions
+- [x] Private aggregate statistics notebook in Supabase
+- [ ] Review hosting/provider logging and finalize privacy notice
+- [ ] Exportable personal report generated locally in the visitor's browser
 
 The YOUNOVAL name is provisional; trademark and domain availability have not been cleared.
