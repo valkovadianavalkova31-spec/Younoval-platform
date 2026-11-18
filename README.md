@@ -2,7 +2,7 @@
 
 A bilingual (Russian / English), research-informed educational project focused on strengthening youth entrepreneurship in Russia.
 
-**100% free. No registration.** Calculations run in the browser; the latest results are stored locally on the visitor's device.
+**All eight tools are free.** The current public version does not yet have phone authentication or a central account database. Tool calculations run in the browser and the latest result for each tool is stored locally on the visitor's device.
 
 ## Research purpose
 
@@ -23,15 +23,19 @@ The Youth Business Resilience Model (YBRM) is a preliminary author-designed fram
 
 The Business Health Check uses a 0–3 practice-adoption scale. Its score describes the practices selected by a user. It is **not a validated predictive model**, does not estimate the probability of business closure, and must not be interpreted as a measure of survival likelihood. No empirical validation or causal effect is claimed.
 
-## Current website
+## Current website and tools
 
 - Responsive bilingual landing page (RU / EN).
 - Business Health Check across six resilience dimensions.
 - Financial Stability Planner: net monthly cash flow, cash runway and break-even units.
 - Marketing Performance Calculator: CAC, conversion rate, average order value and ROAS.
-- Local storage for language preference and latest tool results.
-
-Planned: Market Validation Check, Risk & Recovery Guide, Operational Resilience Check, Business Adaptability Check and 90-Day Action Plan.
+- Market Validation Check.
+- Risk Priority Matrix.
+- Operational Resilience Check.
+- Business Adaptability Check.
+- 90-Day Action Plan.
+- Browser local storage for language preference and latest result per tool.
+- Optional privacy-first analytics adapter supports all eight fixed tool IDs, but remains disabled until a provider and legal basis are reviewed.
 
 ## Calculation notes
 
@@ -47,7 +51,9 @@ These are simplified educational indicators, not accounting, tax, legal, investm
 
 ## Privacy and technology
 
-This is a static HTML, CSS and JavaScript project. No backend, account system, analytics service or paid API is required. The language choice and latest results use browser local storage. Clearing browser site data removes those values. Calculator inputs are processed in the browser and are not intentionally sent to a server.
+The current public version is a static HTML, CSS and JavaScript project. It does not currently provide phone authentication, a central account database, or central storage of tool answers/results. Language choice and latest results use browser local storage. Clearing browser site data removes those values. Calculator inputs are processed in the browser and are not intentionally sent to a YOUNOVAL application backend.
+
+The future account system is planned around a Russian-hosted backend and database. Do not collect phone numbers or account-linked results until hosting location, provider terms, privacy documentation, required consents and security controls have been reviewed. The analytics adapter is disabled by default.
 
 ## Run locally
 
@@ -55,7 +61,7 @@ Open index.html in a modern browser, or serve this folder with any static web se
 
 ## Deployment
 
-The static project can be deployed using GitHub Pages or Cloudflare Pages within their applicable free tiers. Use the repository root as the output directory; no build command is needed.
+The current static project is deployed as a static site. The future account backend must be deployed separately on infrastructure selected for Russian data localization requirements; do not put database credentials or SMS API keys in frontend code.
 
 ## Research integrity
 
@@ -64,14 +70,13 @@ YOUNOVAL distinguishes published findings and official statistics from working h
 ## Roadmap
 
 - [x] Bilingual responsive website
-- [x] Business Health Check
-- [x] Financial Stability Planner
-- [x] Marketing Performance Calculator
-- [ ] Market Validation Check
-- [ ] Risk & Recovery Guide
-- [ ] Operational Resilience Check
-- [ ] Business Adaptability Check
-- [ ] Unified analysis dashboard and 90-day action plan
+- [x] Eight functional browser-based tools
+- [x] Local storage for latest results per tool
+- [x] Analytics adapter allowlist for all eight tools (provider disabled)
+- [ ] Russian-hosted backend and database
+- [ ] Phone-number authentication with one-time verification codes
+- [ ] Account-linked saving and retrieval of answers/results for all eight tools
+- [ ] Owner-only aggregate dashboard for registrations, active accounts and tool popularity
 - [ ] Exportable personal report
 
 The YOUNOVAL name is provisional; trademark and domain availability have not been cleared.
