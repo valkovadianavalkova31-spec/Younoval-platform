@@ -1,0 +1,9 @@
+{
+  "name": "younoval-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "YOUNOVAL account, results and privacy-conscious analytics API foundation",
+  "engines": { "node": ">=22" },
+  "scripts": { "start": "node src/server.js", "check": "node --check src/server.js" },
+  "dependencies": { "express": "^5.1.0", "helmet": "^8.1.0", "pg": "^8.16.3" }
+}
