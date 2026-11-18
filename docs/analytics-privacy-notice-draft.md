@@ -4,18 +4,16 @@ YOUNOVAL's tools are free and do not require registration. Visitors do not provi
 
 ## Tool answers and results
 
-Tool inputs, answers, notes and calculated results are processed in the visitor's browser. The latest results are saved in that browser's local storage so the visitor can return to them on the same device and browser. They are not sent to YOUNOVAL's application backend and are not visible to the project owner. Clearing saved results in the interface removes the YOUNOVAL results stored in that browser.
+Tool inputs, answers, notes and calculated results are processed in the visitor's browser. The latest results are saved in that browser's local storage so the visitor can return to them on the same device and browser. They are not sent to YOUNOVAL's application database and are not visible to the project owner.
 
 Please do not enter confidential business information, personal data about customers or employees, credentials, payment-card details or government identifiers.
 
 ## Aggregate usage statistics
 
-YOUNOVAL plans to show the project owner aggregate counts only: overall visits, tool opens and tool completions by tool and period. These statistics are not intended to identify visitors or connect usage to individual answers or results.
-
-The optional analytics adapter is currently disabled. If an analytics provider is enabled in a future release, this notice must be updated to identify the provider, data it processes, purposes, retention, storage locations and any transfers before collection begins.
+YOUNOVAL records aggregate counts of page loads, tool opens and tool completions. The stored statistics contain the UTC date, a fixed event type, a fixed tool identifier where relevant, and an aggregate count. They do not contain individual visitor records, user IDs, session IDs, questionnaire answers, financial inputs, notes or calculated results. The counts do not represent unique people.
 
 ## Technical connection data
 
-A website host may process technical connection information, such as IP addresses, in access logs or transiently to deliver and protect the website. The operator must verify the hosting provider's actual logging, retention and privacy terms before making definitive statements about this processing.
+The website host and Supabase may process technical connection information, such as IP addresses, in infrastructure and security logs to deliver and protect the service. Such technical processing is separate from the aggregate statistics table. The operator must confirm provider logging, retention, data locations and applicable Russian personal-data requirements before treating this draft as a final legal notice.
 
-This is a draft, not final legal advice. The project operator should review applicable Russian personal-data and other privacy requirements, hosting logs and third-party resources before publication.
+This is a technical draft, not final legal advice. The project operator should review applicable Russian personal-data and other privacy requirements, hosting logs and third-party resources before publication.
