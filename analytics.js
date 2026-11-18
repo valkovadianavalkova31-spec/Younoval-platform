@@ -1,18 +1,20 @@
 /*
  * YOUNOVAL privacy-first analytics adapter.
  *
- * Disabled by default. To enable after reviewing the provider's terms and
- * applicable privacy/localization requirements, set
- * window.YN_ANALYTICS_ENDPOINT to the site's GoatCounter /count endpoint
- * before this file loads (see docs/analytics-plan.md).
+ * Disabled by default. Do not set an analytics endpoint until the provider,
+ * processing locations and applicable Russian privacy requirements have
+ * been reviewed. No external analytics provider is currently connected.
  *
- * Only allow-listed event names and tool IDs are sent. Never send answers,
- * calculated values, free text, phone/email, IP, or device identifiers.
+ * Only allow-listed event names and fixed tool IDs may be sent. Never send
+ * answers, calculated values, free text, phone/email, IP, or device identifiers.
  */
 (() => {
   const endpoint = window.YN_ANALYTICS_ENDPOINT || "";
   const allowedEvents = new Set(["tool_started", "tool_completed"]);
-  const allowedTools = new Set(["health", "finance", "marketing"]);
+  const allowedTools = new Set([
+    "health", "finance", "marketing", "market",
+    "risk", "operations", "adapt", "plan"
+  ]);
   const queue = [];
 
   const send = (eventName, toolId) => {
