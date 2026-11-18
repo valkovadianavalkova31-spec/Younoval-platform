@@ -1,11 +1,21 @@
-# YOUNOVAL — analytics and privacy notice (draft)
+# YOUNOVAL — privacy notice (draft)
 
-YOUNOVAL's public tools do not require visitors to create an account. Tool inputs and results are stored in the visitor's own browser using local storage and are not sent to the YOUNOVAL application backend.
+YOUNOVAL's tools are free and do not require registration. Visitors do not provide a phone number, create an account or upload their results.
 
-The website's optional analytics integration is disabled by default. If analytics is enabled in a future release, it is intended to count page views and fixed tool-use events only. It must not send questionnaire answers, financial inputs, calculated results, free text, phone numbers, email addresses or device fingerprints.
+## Tool answers and results
 
-A third-party analytics provider may process technical connection information to provide aggregate statistics. The provider, data categories, purposes, retention and any international data transfers must be identified in the final notice before activation. Until that review and notice are complete, keep analytics disabled.
+Tool inputs, answers, notes and calculated results are processed in the visitor's browser. The latest results are saved in that browser's local storage so the visitor can return to them on the same device and browser. They are not sent to YOUNOVAL's application backend and are not visible to the project owner. Clearing saved results in the interface removes the YOUNOVAL results stored in that browser.
 
-Visitors should avoid entering confidential business information, personal data about customers or employees, credentials, payment-card details or government identifiers into the tools. Clearing saved results in the interface removes the YOUNOVAL tool-results entry from that browser's local storage.
+Please do not enter confidential business information, personal data about customers or employees, credentials, payment-card details or government identifiers.
 
-This is a technical draft, not a final legal document. The operator must verify hosting logs, fonts and other third-party resources, and applicable Russian personal-data and other privacy requirements before publication.
+## Aggregate usage statistics
+
+YOUNOVAL plans to show the project owner aggregate counts only: overall visits, tool opens and tool completions by tool and period. These statistics are not intended to identify visitors or connect usage to individual answers or results.
+
+The optional analytics adapter is currently disabled. If an analytics provider is enabled in a future release, this notice must be updated to identify the provider, data it processes, purposes, retention, storage locations and any transfers before collection begins.
+
+## Technical connection data
+
+A website host may process technical connection information, such as IP addresses, in access logs or transiently to deliver and protect the website. The operator must verify the hosting provider's actual logging, retention and privacy terms before making definitive statements about this processing.
+
+This is a draft, not final legal advice. The project operator should review applicable Russian personal-data and other privacy requirements, hosting logs and third-party resources before publication.
