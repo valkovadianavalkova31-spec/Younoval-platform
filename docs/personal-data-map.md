@@ -1,6 +1,6 @@
 # YOUNOVAL — preliminary personal-data map
 
-**Status:** draft for legal review. No account collection is enabled.
+**Status:** draft for legal review. No account collection or SMS sending is enabled.
 
 ## Purposes
 
@@ -12,12 +12,13 @@
 
 ## Planned data categories
 
-### Account
-- email address;
+### Account and authentication
+- mobile subscriber number in normalized international format;
 - internal account UUID;
-- password hash (never plaintext);
-- account status and timestamps;
-- verification and recovery state, once designed.
+- optional email address for contact/recovery;
+- phone verification timestamp, account status and timestamps;
+- short-lived OTP challenge hash, purpose, expiry and attempt count (never plaintext OTP);
+- session identifiers/tokens, protected separately from ordinary profile data.
 
 ### Tool results
 - account UUID;
@@ -35,13 +36,14 @@ Only an allow-listed event name, tool identifier, account UUID and event timesta
 - tool_completed;
 - plan_created.
 
-Do not put email, raw answers, free text, financial values, IP address, device fingerprint or other unnecessary identifiers in analytics events. Account-linked event data remains personal/pseudonymous data and must be handled as such. Publish aggregate counts only.
+Do not put phone/email, raw answers, free text, financial values, IP address, device fingerprint or other unnecessary identifiers in analytics events. Account-linked event data remains personal/pseudonymous data and must be handled as such. Publish aggregate counts only.
 
 ## Retention
 
 Exact periods are intentionally not hard-coded in the database design. Before collection begins, define and disclose:
 - account and result retention while the account is active;
 - deletion workflow and any legally required retention exceptions;
+- OTP challenge cleanup shortly after expiry/consumption;
 - short-lived raw analytics-event retention;
 - longer retention for genuinely aggregate daily statistics;
 - security-log retention.
@@ -52,12 +54,12 @@ Exact periods are intentionally not hard-coded in the database design. Before co
 - Determine whether separate consent is required; keep personal-data consent separate from user terms.
 - Finalize privacy notice, consent text, user terms and withdrawal/deletion process.
 - Determine whether analytics requires separate opt-in and implement consent enforcement.
-- Assess Article 8(10) of 149-FZ and choose an allowed authentication method if it applies.
+- Assess Article 8(10) of 149-FZ and validate phone-number authentication with Russian counsel and the selected provider.
 - Select a Russian-hosted production database and verify backups, replicas, logs, support access and subprocessors.
 - Complete the RKN notification before processing where required.
 - Complete threat modelling, access controls, encryption, backup/restore and incident procedures.
-- Do not activate registration or event collection until all gates are complete.
+- Do not activate registration, SMS sending or event collection until all gates are complete.
 
 ## Data model
 
-See backend/db/migrations/001_initial_schema.sql. The schema separates accounts, consents, individual tool results, short-lived account-linked analytics events and aggregate daily rollups.
+See backend/db/migrations/001_initial_schema.sql. The schema separates phone-based accounts, OTP challenges, consents, individual tool results, short-lived account-linked analytics events and aggregate daily rollups.
