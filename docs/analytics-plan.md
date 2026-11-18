@@ -45,9 +45,20 @@ Official documentation:
 - The application never sends tool answers, inputs or calculated results to analytics.
 - Tool results continue to be stored locally in the visitor's browser under the existing local-storage implementation.
 
+## Dashboard access — owner only
+
+The analytics dashboard must remain private:
+
+- Set GoatCounter **Dashboard viewable by** to **logged in users only** (not public and not secret-token access).
+- Use only the project owner's individual account; do not invite other users.
+- Do not embed the dashboard in YOUNOVAL, add a public statistics page, publish a dashboard link, or place an API token in frontend code.
+- If a private dashboard is later built into a separate owner-only area, it must use a server-side secret and real authentication; never expose a read-statistics token in browser JavaScript.
+
+The current public website contains no analytics dashboard. Visitors cannot view the owner's statistics.
+
 ## Activation checklist
 
-1. Create the project owner's GoatCounter site and review its current terms/privacy settings.
+1. Create the project owner's GoatCounter site and review its current terms/privacy settings. Keep dashboard visibility set to **logged in users only** and do not add other accounts.
 2. Disable individual pageview storage and any unnecessary dimensions (location, browser/system, screen width and language) where the dashboard permits.
 3. Confirm whether the provider's transient processing and Finland/Germany storage are acceptable for the project's actual operator, audience and applicable law. If not, leave analytics disabled and use a Russian-hosted solution only after legal review.
 4. Add the site's `/count` endpoint to `window.YN_ANALYTICS_ENDPOINT`.
