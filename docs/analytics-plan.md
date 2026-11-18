@@ -1,71 +1,77 @@
 # YOUNOVAL — privacy-first analytics plan
 
-**Status: prepared in code, disabled by default. No analytics provider is currently connected.**
+**Status: the event adapter supports all eight tools, but analytics is disabled. No provider or account backend is currently connected.**
 
-## Research questions the analytics should answer
+## Research questions
 
 1. How many page views does the public site receive?
-2. Which available tools are opened most often?
-3. How often is each tool completed after it is opened?
-4. Does usage change after a tool or explanation is improved?
+2. Which of the eight tools are opened and completed most often?
+3. How does aggregate tool usage change after an improvement?
+4. After account functionality is implemented, how many registrations and returning active accounts are recorded?
 
-These metrics describe platform usage. They do not prove that a user is a unique person, that the tool improved a business, or that the YBRM model predicts business survival.
+These metrics describe platform usage. They do not prove that a user is a unique person, that a tool improved a business, or that the YBRM model predicts business survival.
 
-## Minimal event schema
+## Tool event schema
 
-Only these events are planned:
+Only two tool events are planned:
 
-| Event | When | Allowed properties |
+| Event | When | Fixed tool ID |
 |---|---|---|
-| Page view | GoatCounter page-view counter | Standard page path |
-| tool_started | A visitor opens one of the available tools | Fixed tool ID: health, finance, marketing |
-| tool_completed | A visitor successfully calculates a result | Fixed tool ID: health, finance, marketing |
+| tool_started | A visitor opens a tool | health, finance, marketing, market, risk, operations, adapt, plan |
+| tool_completed | A visitor successfully completes a tool | health, finance, marketing, market, risk, operations, adapt, plan |
 
-No custom payloads are sent. Tool answers, financial inputs, calculated values, result text, free text, phone numbers, email addresses, IP addresses and device fingerprints are never included in custom events.
+No answers or custom payloads are sent with these events. Tool answers, financial inputs, calculated values, result text, free text, phone numbers and email addresses must never be included in analytics events.
 
-Completion rate is calculated from aggregate event counts: completions divided by starts for the same tool and period. Because no visitor/session identifier is retained in our event names, this is an aggregate ratio, not a person-level funnel. Repeated use can make the ratio exceed or differ from a true per-person completion rate.
+Registration and active-account metrics require the future Russian-hosted account backend. They are not currently measured.
 
-## Free provider candidate
-
-GoatCounter offers a hosted service free for reasonable public usage and supports custom events. Its documentation says it stores aggregate statistics by hour/day and does not persist IP addresses or full User-Agent headers in its normal aggregate mode. It does process IP + User-Agent transiently in memory (up to eight hours) to estimate repeat visits; derived country/browser/screen/language statistics can be stored unless disabled. Its hosted service is operated from Ireland and stores data on Hetzner servers in Finland and Germany. An owner email is required for the GoatCounter account.
-
-Official documentation:
-- https://www.goatcounter.com/help/events
-- https://www.goatcounter.com/help/privacy
-- https://www.goatcounter.com/help/terms
-
-**Important:** this provider is only a candidate. It is not connected. External processing and the provider's data locations must be reviewed against the project's legal obligations and intended Russian audience before activation. Do not describe the project as collecting absolutely no data while a third-party analytics provider is enabled.
+Completion counts are aggregate events, not a person-level funnel unless a lawful, minimized account-level event design is implemented on the Russian backend.
 
 ## Current implementation
 
-- `analytics.js` is a small optional adapter.
-- It is disabled unless `window.YN_ANALYTICS_ENDPOINT` is set before the adapter loads.
+- `analytics.js` supports the two fixed event names and all eight fixed tool IDs.
+- It remains disabled unless `window.YN_ANALYTICS_ENDPOINT` is set.
 - No provider script is requested when the endpoint is empty.
-- The adapter accepts only two event names and three fixed tool IDs.
-- The application never sends tool answers, inputs or calculated results to analytics.
-- Tool results continue to be stored locally in the visitor's browser under the existing local-storage implementation.
+- The application does not send answers, inputs or calculated results to analytics.
+- The current app still stores the latest result in the visitor's browser local storage.
+- No registration, central result storage, account analytics or owner dashboard is connected.
 
-## Dashboard access — owner only
+## Russian data-location requirement
 
-The analytics dashboard must remain private:
+YOUNOVAL is operated from Russia and is intended for Russian users. Before collecting phone numbers or storing account-linked answers/results, choose infrastructure with the relevant databases physically located in Russia and review the operator's obligations under 152-FZ, including the current localization rule in Article 18(5). Do not connect a foreign-hosted analytics provider or database to personal data before legal review.
 
-- Set GoatCounter **Dashboard viewable by** to **logged in users only** (not public and not secret-token access).
-- Use only the project owner's individual account; do not invite other users.
-- Do not embed the dashboard in YOUNOVAL, add a public statistics page, publish a dashboard link, or place an API token in frontend code.
-- If a private dashboard is later built into a separate owner-only area, it must use a server-side secret and real authentication; never expose a read-statistics token in browser JavaScript.
+The existing GoatCounter integration code is only an optional adapter pattern; its hosted service is not selected or activated. Keep the endpoint empty.
 
-The current public website contains no analytics dashboard. Visitors cannot view the owner's statistics.
+## Future account and results architecture
+
+The planned Russian-hosted backend should keep separate records for:
+- accounts: internal user ID, normalized phone number, verification status, timestamps;
+- verification challenges: hashed one-time code, expiry, attempt limit, resend limit;
+- tool runs: account ID, tool ID, version, created/updated timestamps;
+- tool answers and calculated outputs: structured JSON per tool, with access restricted to the owning account;
+- minimal aggregate analytics: registrations, active accounts, tool starts and completions.
+
+Do not store raw SMS codes. Do not expose database credentials or SMS API keys in frontend code. All database and SMS operations must run server-side. Use authorization checks on every read/write so one account cannot access another account's records.
+
+## Privacy and access controls
+
+- Keep personal data and account-linked tool results in Russian infrastructure.
+- Collect only fields necessary for authentication, saved results and stated analytics.
+- Keep the analytics dashboard owner-only; never expose admin metrics or API secrets in public frontend code.
+- Publish a complete privacy notice and obtain the required consents before enabling collection.
+- Provide a way to request access, correction and deletion where required.
+- Avoid collecting customer/employee personal data inside free-text tool notes.
+
+## Provider decision
+
+No Russian database/hosting provider or SMS provider has been selected yet. A free managed database and free SMS delivery must not be assumed. Confirm provider pricing, region, contract terms, data-processing terms and availability before activation.
 
 ## Activation checklist
 
-1. Create the project owner's GoatCounter site and review its current terms/privacy settings. Keep dashboard visibility set to **logged in users only** and do not add other accounts.
-2. Disable individual pageview storage and any unnecessary dimensions (location, browser/system, screen width and language) where the dashboard permits.
-3. Confirm whether the provider's transient processing and Finland/Germany storage are acceptable for the project's actual operator, audience and applicable law. If not, leave analytics disabled and use a Russian-hosted solution only after legal review.
-4. Add the site's `/count` endpoint to `window.YN_ANALYTICS_ENDPOINT`.
-5. Test page views and the two event types using non-real test traffic.
-6. Publish a concise analytics/privacy notice before enabling collection.
-7. Periodically export aggregate reports for the research log; never publish raw event logs.
-
-## What can be measured before activation
-
-The website can be used and tool results can be saved locally without any central analytics. Without a connected analytics provider, the owner cannot see cross-visitor totals. Browser-local counters would only describe activity on that one device and must not be presented as total site usage.
+1. Select Russian hosting and database, confirm the physical data region, and configure a server-side API.
+2. Select an SMS provider and obtain API credentials; keep them in server-side environment variables.
+3. Implement phone verification with short-lived hashed codes, attempt limits, resend limits and rate limiting.
+4. Implement account-scoped storage and retrieval for all eight tools.
+5. Add consent, privacy notice, retention and deletion flows.
+6. Add owner-only aggregate analytics on the Russian backend.
+7. Keep third-party analytics disabled unless separately reviewed and approved.
+8. Test account isolation, authentication abuse limits, backups and restore before public launch.
