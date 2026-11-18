@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f2f3ed">
+  <meta name="description" content="Как YOUNOVAL обрабатывает данные посетителей и хранит результаты инструментов.">
+  <link rel="canonical" href="https://younoval-platform.onrender.com/privacy.html">
+  <title>Конфиденциальность — YOUNOVAL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .privacy-document{max-width:860px;margin:72px auto 100px;padding:0 24px}
+    .privacy-document h1{font-size:clamp(2.3rem,6vw,4.6rem);line-height:1.05;margin:18px 0 20px}
+    .privacy-document h2{font-size:1.35rem;margin:42px 0 12px}
+    .privacy-document p,.privacy-document li{font-size:1rem;line-height:1.75;color:#4d514b}
+    .privacy-document ul{padding-left:22px}
+    .privacy-document .notice{padding:20px 22px;background:#e9eee4;border-radius:14px;margin:28px 0}
+    .privacy-document .lang-block{padding-top:16px;border-top:1px solid #d9ddd4;margin-top:54px}
+    .privacy-document a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+    .privacy-back{display:inline-block;margin-top:30px}
+  </style>
+</head>
+<body>
+  <header><a class="brand" href="index.html"><span class="brand-mark">Y.</span> YOUNOVAL</a><div class="header-actions"><a class="btn dark" href="index.html">На главную</a></div></header>
+  <main class="privacy-document">
+    <small class="eyebrow">YOUNOVAL · ДАННЫЕ И КОНФИДЕНЦИАЛЬНОСТЬ</small>
+    <h1>Как работают данные на YOUNOVAL</h1>
+    <p><strong>Последнее обновление: 19 ноября 2026 года.</strong></p>
+    <div class="notice"><p><strong>Коротко:</strong> регистрация не требуется. Ответы, введённые показатели, заметки и результаты инструментов обрабатываются в браузере посетителя и сохраняются локально на его устройстве. Для статистики использования сайт отправляет только фиксированные события и идентификаторы инструментов; сетевые запросы при этом могут сопровождаться техническими данными, например IP-адресом.</p></div>
+
+    <h2>1. Ответы и результаты инструментов</h2>
+    <p>Инструменты YOUNOVAL выполняют расчёты в браузере. Ответы, финансовые значения, заметки и полученные результаты не отправляются в базу данных приложения и не доступны создателю проекта. Последний результат каждого инструмента и выбранный язык могут сохраняться в локальном хранилище браузера (localStorage), чтобы посетитель мог вернуться к ним на том же устройстве и в том же браузере.</p>
+    <p>Сохранённые результаты можно удалить кнопкой «Очистить результаты» на сайте или очистив данные сайта в настройках браузера. Они не синхронизируются между устройствами. Не вводите конфиденциальные сведения о бизнесе, данные клиентов и сотрудников, пароли, платёжные реквизиты или государственные идентификаторы.</p>
+
+    <h2>2. Агрегированная статистика использования</h2>
+    <p>YOUNOVAL использует собственный счётчик на Supabase, чтобы понимать общую востребованность сайта и инструментов. Передаются только следующие события:</p>
+    <ul>
+      <li><strong>page_view</strong> — загрузка страницы;</li>
+      <li><strong>tool_started</strong> — открытие одного из восьми инструментов;</li>
+      <li><strong>tool_completed</strong> — получение результата инструмента.</li>
+    </ul>
+    <p>В базе сохраняются дата по UTC, тип события, фиксированный идентификатор инструмента (для событий инструментов) и общий счётчик. Не сохраняются ответы, суммы, заметки, результаты, имена, адреса электронной почты, телефоны, идентификаторы посетителей, сессий или устройств. Эти счётчики не показывают число уникальных людей; повторные посещения и повторные действия увеличивают значения.</p>
+
+    <h2>3. Технические данные и сторонние сервисы</h2>
+    <p>Публичная версия сайта размещается на Render. Для агрегированной статистики используются Supabase (проект расположен в регионе EU West, Ирландия) и его Edge Function. Шрифты загружаются через Google Fonts. Эти сервисы обрабатывают сетевые запросы и могут получать технические сведения, необходимые для доставки, защиты и работы сервисов, включая IP-адреса и технические журналы. Такие сведения не записываются в таблицу агрегированной статистики YOUNOVAL.</p>
+    <p>Точные сроки хранения технических журналов и полный состав технических данных зависят от настроек и правил соответствующих провайдеров. Перед окончательным юридическим утверждением уведомления оператору проекта необходимо проверить эти условия, расположение данных и применимые требования законодательства.</p>
+
+    <h2>4. Контакт</h2>
+    <p>По вопросам работы сайта и конфиденциальности можно связаться с создателем проекта через Telegram: <a href="https://t.me/dvlkd" target="_blank" rel="noopener">@dvlkd</a>.</p>
+    <p>Эта страница описывает текущую техническую реализацию YOUNOVAL. Она не является юридическим заключением. Перед окончательным запуском оператору проекта необходимо указать надлежащие сведения об операторе, определить правовые основания обработки, проверить требования к локализации и трансграничной передаче данных и при необходимости дополнить уведомление обязательными реквизитами.</p>
+
+    <div class="lang-block">
+      <small class="eyebrow">ENGLISH VERSION</small>
+      <h1>How YOUNOVAL handles data</h1>
+      <p><strong>Last updated: 19 November 2026.</strong></p>
+      <div class="notice"><p><strong>In short:</strong> no registration is required. Tool answers, entered figures, notes and results are processed in the visitor's browser and saved locally on that device. The site sends only fixed usage events and tool identifiers for aggregate statistics. Network requests may still involve technical data such as IP addresses.</p></div>
+
+      <h2>1. Tool answers and results</h2>
+      <p>YOUNOVAL tools calculate results in the browser. Answers, financial figures, notes and results are not sent to the application's database and are not visible to the project owner. The latest result for each tool and the selected language may be saved in browser localStorage so the visitor can return to them in the same browser on the same device. Results are not synced between devices.</p>
+      <p>Visitors can delete saved results using the “Clear results” control on the site or by clearing the site's browser data. Please do not enter confidential business information, customer or employee data, passwords, payment details or government identifiers.</p>
+
+      <h2>2. Aggregate usage statistics</h2>
+      <p>YOUNOVAL uses a counter hosted on Supabase to understand overall website and tool usage. It records page views, tool starts and tool completions. The database stores the UTC date, a fixed event type, a fixed tool identifier where relevant, and an aggregate count. It does not store answers, amounts, notes, results, names, email addresses, phone numbers, visitor IDs, session IDs or device identifiers. Counts are not unique visitors.</p>
+
+      <h2>3. Technical data and third-party services</h2>
+      <p>The public website is hosted on Render. Supabase (EU West, Ireland) and its Edge Function provide aggregate statistics. Fonts are loaded through Google Fonts. These providers may process technical connection information, including IP addresses and infrastructure logs, to deliver, secure and operate their services. Such information is not stored in YOUNOVAL's aggregate statistics table. Exact log retention and processing details depend on provider settings and policies and must be reviewed by the project operator.</p>
+
+      <h2>4. Contact and legal notice</h2>
+      <p>For questions about the website or privacy, contact the project creator on Telegram: <a href="https://t.me/dvlkd" target="_blank" rel="noopener">@dvlkd</a>.</p>
+      <p>This page describes the current technical implementation and is not legal advice. Before final publication, the project operator must provide any legally required operator details, determine the lawful basis for processing, and review applicable data-localization and international-transfer requirements.</p>
+    </div>
+    <a class="privacy-back" href="index.html">← Вернуться на YOUNOVAL</a>
+  </main>
+</body>
+</html>
