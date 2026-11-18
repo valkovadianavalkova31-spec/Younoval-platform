@@ -2,7 +2,7 @@
 
 A bilingual (Russian / English), research-informed educational project focused on strengthening youth entrepreneurship in Russia.
 
-**All eight tools are free.** The current public version does not yet have phone authentication or a central account database. Tool calculations run in the browser and the latest result for each tool is stored locally on the visitor's device.
+**All eight tools are free and available without registration.** Tool calculations run in the visitor's browser. The latest result for each tool is saved locally in that browser; YOUNOVAL does not receive or centrally store individual answers or results.
 
 ## Research purpose
 
@@ -34,8 +34,8 @@ The Business Health Check uses a 0–3 practice-adoption scale. Its score descri
 - Operational Resilience Check.
 - Business Adaptability Check.
 - 90-Day Action Plan.
-- Browser local storage for language preference and latest result per tool.
-- Optional privacy-first analytics adapter supports all eight fixed tool IDs, but remains disabled until a provider and legal basis are reviewed.
+- Local browser storage for language preference and latest result per tool.
+- Optional aggregate analytics adapter supports all eight tools but remains disabled until a suitable provider is reviewed.
 
 ## Calculation notes
 
@@ -51,9 +51,9 @@ These are simplified educational indicators, not accounting, tax, legal, investm
 
 ## Privacy and technology
 
-The current public version is a static HTML, CSS and JavaScript project. It does not currently provide phone authentication, a central account database, or central storage of tool answers/results. Language choice and latest results use browser local storage. Clearing browser site data removes those values. Calculator inputs are processed in the browser and are not intentionally sent to a YOUNOVAL application backend.
+No registration, phone numbers, accounts or central storage of user results. Tool answers, inputs, notes and calculated outputs are processed in the browser and saved locally on the visitor's device. They are not sent to a YOUNOVAL application backend and are not visible to the project owner.
 
-The future account system is planned around a Russian-hosted backend and database. Do not collect phone numbers or account-linked results until hosting location, provider terms, privacy documentation, required consents and security controls have been reviewed. The analytics adapter is disabled by default.
+The planned owner statistics are aggregate counts only: visits, tool opens and completions by tool and period. They must not include answers, financial inputs, notes, user IDs or visitor-level histories. The analytics adapter is disabled by default. Website hosting may process technical connection data in its logs; the operator must verify actual provider practices before making absolute no-data-collection claims.
 
 ## Run locally
 
@@ -61,7 +61,7 @@ Open index.html in a modern browser, or serve this folder with any static web se
 
 ## Deployment
 
-The current static project is deployed as a static site. The future account backend must be deployed separately on infrastructure selected for Russian data localization requirements; do not put database credentials or SMS API keys in frontend code.
+The project is deployed as a static site. No application backend or database is required for the tools to work.
 
 ## Research integrity
 
@@ -73,10 +73,7 @@ YOUNOVAL distinguishes published findings and official statistics from working h
 - [x] Eight functional browser-based tools
 - [x] Local storage for latest results per tool
 - [x] Analytics adapter allowlist for all eight tools (provider disabled)
-- [ ] Russian-hosted backend and database
-- [ ] Phone-number authentication with one-time verification codes
-- [ ] Account-linked saving and retrieval of answers/results for all eight tools
-- [ ] Owner-only aggregate dashboard for registrations, active accounts and tool popularity
-- [ ] Exportable personal report
+- [ ] Privacy-reviewed aggregate counter and private owner-only statistics view
+- [ ] Exportable personal report generated locally in the visitor's browser
 
 The YOUNOVAL name is provisional; trademark and domain availability have not been cleared.
