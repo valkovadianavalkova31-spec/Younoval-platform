@@ -17,3 +17,46 @@ footer{justify-content:space-between;gap:24px}
 .footer-contact span{font-size:8px;letter-spacing:.12em;color:#8b9287}
 .footer-contact a{font-size:12px;color:var(--ink);font-weight:700;text-decoration:none}
 @media(max-width:620px){.free-word{font-size:48px;margin:17px 0}.theory{padding:70px 0}.theory-grid{grid-template-columns:repeat(2,1fr);gap:8px}.theory-grid article{padding:14px;min-height:155px}.theory-grid h3{font-size:13px}footer{align-items:flex-start}.footer-main{width:100%}.footer-contact{margin-top:8px}footer>b{margin-left:auto}}
+
+/* YOUNOVAL visual direction: editorial research toolkit, not a generic AI dashboard */
+:root{--bg:#f2f3ed;--ink:#20251f;--muted:#737d6d;--line:#d9dfd2;--lime:#d8ed91;--green:#758d4b}
+.hero h1 em{color:#20251f!important;font-style:normal}
+.hero{grid-template-columns:1.08fr .92fr;gap:8%;min-height:590px}
+.dashboard-preview{border-radius:2px;background:#e5e9dd;padding:24px;box-shadow:14px 14px 0 #d8ed91;min-height:390px}
+.preview-stat-grid{grid-template-columns:1fr}
+.preview-stat-wide{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.preview-stat-wide strong{font-size:27px}
+.preview-stat-wide span{font-size:10px}
+.chart-card,.preview-stat{border-radius:2px}
+.intro{padding-top:112px;padding-bottom:112px}
+.intro .split{align-items:start}
+.intro .split h2{font-size:clamp(42px,4.7vw,58px)}
+.catalog{background:#e9ece5}
+.cards{grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid #d5dccf}
+.card{min-height:220px;border:0;border-bottom:1px solid #d5dccf;border-radius:0;background:transparent;padding:24px 26px;display:grid;grid-template-columns:52px 1fr auto;grid-template-rows:auto auto 1fr;column-gap:16px;align-items:start}
+.card:nth-child(odd){border-right:1px solid #d5dccf}
+.card>div{grid-column:1/-1;grid-row:1}
+.card>i{grid-column:1;grid-row:2/4;margin:22px 0 0;width:42px;height:42px;border-radius:3px}
+.card h3{grid-column:2;grid-row:2;margin:24px 0 7px;font-size:17px}
+.card p{grid-column:2;grid-row:3;font-size:11px;max-width:300px}
+.card .try-button{grid-column:3;grid-row:2/4;align-self:center;justify-self:end;width:auto;height:auto;padding:10px 14px;border-radius:2px;background:#20251f;color:white;font:600 10px var(--body);white-space:nowrap}
+.card .try-button:hover{background:#758d4b}
+.card.soon{opacity:.72}
+.card.soon>i{filter:saturate(.65)}
+.theory-grid article{border-radius:2px}
+.workspace-box{border-radius:2px}
+.workspace-box aside{background:#f1f3ed}
+.workspace-box,.panel,.result{border-radius:0}
+.method blockquote{border-radius:0}
+.closing-inner{border-radius:2px}
+.btn{border-radius:2px}
+@media(max-width:620px){
+ .hero{grid-template-columns:1fr;gap:34px}
+ .dashboard-preview{box-shadow:8px 8px 0 #d8ed91}
+ .cards{grid-template-columns:1fr}
+ .card{border-right:0!important;grid-template-columns:42px 1fr;grid-template-rows:auto auto 1fr auto;padding:20px 14px;min-height:205px}
+ .card>i{grid-column:1;grid-row:2/4;width:36px;height:36px}
+ .card h3{grid-column:2;grid-row:2;margin-top:22px}
+ .card p{grid-column:2;grid-row:3}
+ .card .try-button{grid-column:2;grid-row:4;justify-self:start;margin:8px 0 0}
+}
