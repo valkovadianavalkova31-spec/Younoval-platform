@@ -1,52 +1,51 @@
 # YOUNOVAL — privacy-first aggregate analytics
 
-**Status: the event adapter supports all eight tools, but analytics is disabled. No analytics provider is connected.**
+**Status: connected to the project's Supabase database and Edge Function.** The implementation records aggregate counters only; it does not identify visitors.
 
 ## Project principles
 
 - No registration, phone numbers, accounts or user profiles.
-- Tool answers, inputs, notes and calculated results stay in the visitor's own browser.
+- Tool answers, inputs, notes and calculated results stay in the visitor's browser.
 - YOUNOVAL does not receive or centrally store individual tool results.
-- The project owner should see aggregate usage statistics only.
+- The project owner sees aggregate counts only.
 
-## What is stored locally
+## Stored data
 
-The current application uses browser local storage for:
-- the selected language;
-- the latest result for each tool.
+The browser stores the selected language and the latest result for each tool in local storage. These values remain on that device/browser and are not synchronized.
 
-These values remain in that browser on that device. They are not synchronized to another device or sent to YOUNOVAL. Clearing saved results in the interface removes the saved tool results from that browser.
+The Supabase table `public.younoval_daily_counts` stores only:
+- UTC date;
+- fixed event name: `page_view`, `tool_started`, or `tool_completed`;
+- one of the eight fixed tool IDs for tool events (no tool ID for page views);
+- an integer aggregate count and update timestamp.
 
-## Aggregate usage metrics
+There are no event rows per visitor, user IDs, session IDs, cookies, answers, financial inputs, calculated values, free-text notes, phone numbers or email addresses.
 
-The planned statistics are limited to counts:
-- overall page visits;
-- tool opens for each of the eight tools;
-- tool completions for each of the eight tools.
+## Event definitions and limitations
 
-Tool IDs are fixed values only: health, finance, marketing, market, risk, operations, adapt, plan.
+- `page_view`: a page load of the public website.
+- `tool_started`: the visitor selects a tool in the workspace.
+- `tool_completed`: a tool calculates or generates a result.
 
-No questionnaire answers, financial inputs, calculated values, free text, notes, phone numbers, email addresses, account IDs or user-level histories are sent as analytics events. The statistics are counts, not unique-user tracking. A tool-open count is not a count of distinct people.
+Counts are not unique visitors. Repeated visits and repeated tool use increase the counters. Completion/open ratios are aggregate indicators, not person-level conversion rates.
 
-## Current implementation
+## Technical implementation
 
-- `analytics.js` accepts only `tool_started` and `tool_completed` for the eight fixed tool IDs.
-- The adapter is disabled unless an endpoint is explicitly configured.
-- No third-party analytics script is loaded while the endpoint is empty.
-- Tool results remain in local storage.
-- No registration system, central user database, personal-results dashboard or user-level analytics exists.
-- The current code records an open when a visitor selects a tool and a completion when they calculate or generate a result.
+- `analytics.js` sends only fixed event names and tool IDs to the YOUNOVAL Supabase Edge Function.
+- The Edge Function checks the allowed origin, HTTP method, event name and tool ID.
+- A server-side Supabase credential writes through a restricted database function.
+- The counter table has RLS enabled and no access policies for public or signed-in browser roles. Direct client reads and writes are not granted.
+- Tool answers and result payloads are never sent to the function.
+- A private Supabase SQL notebook provides project members with aggregate reports only.
 
 ## Owner statistics
 
-The future owner view should show aggregate counts only, grouped by date and tool. It must not expose visitor-level records, individual answers, financial information or free-text notes. The dashboard must be private and accessible only to the project owner.
+Open the private [YOUNOVAL aggregate usage notebook](https://supabase.com/dashboard/project/mtnmsjftexummebtpyop/explorer/notebook/66d6ed99-7236-40a8-a115-c39f4b5c92aa) in the Supabase project. It contains daily totals, totals by tool, and daily tool usage. Access is governed by Supabase project membership; do not make the notebook public or share it outside the project.
 
 ## Technical privacy caveat
 
-Even an aggregate counter receives a network request. Hosting and analytics providers may process technical connection metadata (for example, IP address) in server logs or transiently to deliver the service. Before enabling a provider, review its data locations, logs, retention, terms and applicable privacy requirements. Do not claim that no technical data is processed unless this has been verified.
-
-The previous GoatCounter adapter is not activated. Keep the endpoint empty until a suitable provider and configuration have been reviewed. Prefer an aggregate counter that increments totals without cookies, account identifiers, fingerprinting or persistent visitor-level logs.
+The counter endpoint receives network requests. Supabase and the static-site host may process technical connection metadata, including IP addresses, in security and infrastructure logs. The aggregate table itself does not store IP addresses or visitor identifiers. The operator must review provider logging, retention, data locations and applicable Russian privacy/localization requirements before making legal claims.
 
 ## Research integrity
 
-Counts describe tool usage, not business outcomes. They cannot show that YOUNOVAL improved a business or that the YBRM model predicts business survival. Report them as aggregate descriptive statistics and disclose the observation period and limitations.
+Counts describe website and tool usage, not business outcomes. They cannot show that YOUNOVAL improved a business or that the YBRM model predicts business survival. Report them as aggregate descriptive statistics with the observation period and limitations.
