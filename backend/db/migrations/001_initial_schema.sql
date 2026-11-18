@@ -6,18 +6,42 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 CREATE TABLE IF NOT EXISTS accounts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  email TEXT NOT NULL,
-  password_hash TEXT,
-  email_verified_at TIMESTAMPTZ,
+  phone_e164 TEXT NOT NULL,
+  phone_verified_at TIMESTAMPTZ,
+  email TEXT,
   status TEXT NOT NULL DEFAULT 'pending'
     CHECK (status IN ('pending', 'active', 'suspended', 'deletion_requested', 'deleted')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   deleted_at TIMESTAMPTZ,
-  CONSTRAINT accounts_email_length CHECK (char_length(email) BETWEEN 3 AND 254)
+  CONSTRAINT accounts_phone_format CHECK (phone_e164 ~ '^\\+[1-9][0-9]{7,14}$'),
+  CONSTRAINT accounts_email_length CHECK (email IS NULL OR char_length(email) BETWEEN 3 AND 254)
 );
+CREATE UNIQUE INDEX IF NOT EXISTS accounts_phone_unique
+  ON accounts (phone_e164) WHERE deleted_at IS NULL;
 CREATE UNIQUE INDEX IF NOT EXISTS accounts_email_lower_unique
-  ON accounts (lower(email)) WHERE deleted_at IS NULL;
+  ON accounts (lower(email)) WHERE email IS NOT NULL AND deleted_at IS NULL;
+
+-- OTPs are never stored in plaintext. otp_hash must be a keyed HMAC generated
+-- with a server-side secret; the secret itself must not be stored in this DB.
+-- Sending, rate limiting and verification remain disabled until a Russian SMS
+-- provider and production controls have been selected and reviewed.
+CREATE TABLE IF NOT EXISTS phone_auth_challenges (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  phone_e164 TEXT NOT NULL CHECK (phone_e164 ~ '^\\+[1-9][0-9]{7,14}$'),
+  otp_hash TEXT NOT NULL,
+  purpose TEXT NOT NULL CHECK (purpose IN ('registration', 'login', 'phone_change', 'recovery')),
+  expires_at TIMESTAMPTZ NOT NULL,
+  attempts SMALLINT NOT NULL DEFAULT 0 CHECK (attempts BETWEEN 0 AND 10),
+  max_attempts SMALLINT NOT NULL DEFAULT 5 CHECK (max_attempts BETWEEN 1 AND 10),
+  consumed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  CHECK (expires_at > created_at)
+);
+CREATE INDEX IF NOT EXISTS phone_auth_challenges_phone_created_idx
+  ON phone_auth_challenges (phone_e164, created_at DESC);
+CREATE INDEX IF NOT EXISTS phone_auth_challenges_expiry_idx
+  ON phone_auth_challenges (expires_at) WHERE consumed_at IS NULL;
 
 CREATE TABLE IF NOT EXISTS consent_records (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -48,9 +72,9 @@ CREATE TABLE IF NOT EXISTS tool_results (
 CREATE INDEX IF NOT EXISTS tool_results_account_tool_date_idx
   ON tool_results (account_id, tool_key, created_at DESC) WHERE archived_at IS NULL;
 
--- Events are allow-listed. Never put email, answers, free text, financial values,
--- IP addresses or device fingerprints in this table. Account linkage is still
--- personal/pseudonymous data and must remain in the Russian data environment.
+-- Events are allow-listed. Never put phone/email, answers, free text, financial
+-- values, IP addresses or device fingerprints in this table. Account linkage is
+-- still personal/pseudonymous data and must remain in the Russian data environment.
 CREATE TABLE IF NOT EXISTS analytics_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   account_id UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
@@ -68,7 +92,6 @@ CREATE INDEX IF NOT EXISTS analytics_events_date_idx ON analytics_events (occurr
 CREATE INDEX IF NOT EXISTS analytics_events_account_date_idx ON analytics_events (account_id, occurred_at DESC);
 CREATE INDEX IF NOT EXISTS analytics_events_tool_date_idx ON analytics_events (tool_key, occurred_at DESC) WHERE tool_key IS NOT NULL;
 
--- Long-lived reporting layer stores counts only, not user identifiers or answers.
 CREATE TABLE IF NOT EXISTS analytics_daily_rollups (
   day DATE NOT NULL,
   metric_key TEXT NOT NULL,
