@@ -1,77 +1,52 @@
-# YOUNOVAL — privacy-first analytics plan
+# YOUNOVAL — privacy-first aggregate analytics
 
-**Status: the event adapter supports all eight tools, but analytics is disabled. No provider or account backend is currently connected.**
+**Status: the event adapter supports all eight tools, but analytics is disabled. No analytics provider is connected.**
 
-## Research questions
+## Project principles
 
-1. How many page views does the public site receive?
-2. Which of the eight tools are opened and completed most often?
-3. How does aggregate tool usage change after an improvement?
-4. After account functionality is implemented, how many registrations and returning active accounts are recorded?
+- No registration, phone numbers, accounts or user profiles.
+- Tool answers, inputs, notes and calculated results stay in the visitor's own browser.
+- YOUNOVAL does not receive or centrally store individual tool results.
+- The project owner should see aggregate usage statistics only.
 
-These metrics describe platform usage. They do not prove that a user is a unique person, that a tool improved a business, or that the YBRM model predicts business survival.
+## What is stored locally
 
-## Tool event schema
+The current application uses browser local storage for:
+- the selected language;
+- the latest result for each tool.
 
-Only two tool events are planned:
+These values remain in that browser on that device. They are not synchronized to another device or sent to YOUNOVAL. Clearing saved results in the interface removes the saved tool results from that browser.
 
-| Event | When | Fixed tool ID |
-|---|---|---|
-| tool_started | A visitor opens a tool | health, finance, marketing, market, risk, operations, adapt, plan |
-| tool_completed | A visitor successfully completes a tool | health, finance, marketing, market, risk, operations, adapt, plan |
+## Aggregate usage metrics
 
-No answers or custom payloads are sent with these events. Tool answers, financial inputs, calculated values, result text, free text, phone numbers and email addresses must never be included in analytics events.
+The planned statistics are limited to counts:
+- overall page visits;
+- tool opens for each of the eight tools;
+- tool completions for each of the eight tools.
 
-Registration and active-account metrics require the future Russian-hosted account backend. They are not currently measured.
+Tool IDs are fixed values only: health, finance, marketing, market, risk, operations, adapt, plan.
 
-Completion counts are aggregate events, not a person-level funnel unless a lawful, minimized account-level event design is implemented on the Russian backend.
+No questionnaire answers, financial inputs, calculated values, free text, notes, phone numbers, email addresses, account IDs or user-level histories are sent as analytics events. The statistics are counts, not unique-user tracking. A tool-open count is not a count of distinct people.
 
 ## Current implementation
 
-- `analytics.js` supports the two fixed event names and all eight fixed tool IDs.
-- It remains disabled unless `window.YN_ANALYTICS_ENDPOINT` is set.
-- No provider script is requested when the endpoint is empty.
-- The application does not send answers, inputs or calculated results to analytics.
-- The current app still stores the latest result in the visitor's browser local storage.
-- No registration, central result storage, account analytics or owner dashboard is connected.
+- `analytics.js` accepts only `tool_started` and `tool_completed` for the eight fixed tool IDs.
+- The adapter is disabled unless an endpoint is explicitly configured.
+- No third-party analytics script is loaded while the endpoint is empty.
+- Tool results remain in local storage.
+- No registration system, central user database, personal-results dashboard or user-level analytics exists.
+- The current code records an open when a visitor selects a tool and a completion when they calculate or generate a result.
 
-## Russian data-location requirement
+## Owner statistics
 
-YOUNOVAL is operated from Russia and is intended for Russian users. Before collecting phone numbers or storing account-linked answers/results, choose infrastructure with the relevant databases physically located in Russia and review the operator's obligations under 152-FZ, including the current localization rule in Article 18(5). Do not connect a foreign-hosted analytics provider or database to personal data before legal review.
+The future owner view should show aggregate counts only, grouped by date and tool. It must not expose visitor-level records, individual answers, financial information or free-text notes. The dashboard must be private and accessible only to the project owner.
 
-The existing GoatCounter integration code is only an optional adapter pattern; its hosted service is not selected or activated. Keep the endpoint empty.
+## Technical privacy caveat
 
-## Future account and results architecture
+Even an aggregate counter receives a network request. Hosting and analytics providers may process technical connection metadata (for example, IP address) in server logs or transiently to deliver the service. Before enabling a provider, review its data locations, logs, retention, terms and applicable privacy requirements. Do not claim that no technical data is processed unless this has been verified.
 
-The planned Russian-hosted backend should keep separate records for:
-- accounts: internal user ID, normalized phone number, verification status, timestamps;
-- verification challenges: hashed one-time code, expiry, attempt limit, resend limit;
-- tool runs: account ID, tool ID, version, created/updated timestamps;
-- tool answers and calculated outputs: structured JSON per tool, with access restricted to the owning account;
-- minimal aggregate analytics: registrations, active accounts, tool starts and completions.
+The previous GoatCounter adapter is not activated. Keep the endpoint empty until a suitable provider and configuration have been reviewed. Prefer an aggregate counter that increments totals without cookies, account identifiers, fingerprinting or persistent visitor-level logs.
 
-Do not store raw SMS codes. Do not expose database credentials or SMS API keys in frontend code. All database and SMS operations must run server-side. Use authorization checks on every read/write so one account cannot access another account's records.
+## Research integrity
 
-## Privacy and access controls
-
-- Keep personal data and account-linked tool results in Russian infrastructure.
-- Collect only fields necessary for authentication, saved results and stated analytics.
-- Keep the analytics dashboard owner-only; never expose admin metrics or API secrets in public frontend code.
-- Publish a complete privacy notice and obtain the required consents before enabling collection.
-- Provide a way to request access, correction and deletion where required.
-- Avoid collecting customer/employee personal data inside free-text tool notes.
-
-## Provider decision
-
-No Russian database/hosting provider or SMS provider has been selected yet. A free managed database and free SMS delivery must not be assumed. Confirm provider pricing, region, contract terms, data-processing terms and availability before activation.
-
-## Activation checklist
-
-1. Select Russian hosting and database, confirm the physical data region, and configure a server-side API.
-2. Select an SMS provider and obtain API credentials; keep them in server-side environment variables.
-3. Implement phone verification with short-lived hashed codes, attempt limits, resend limits and rate limiting.
-4. Implement account-scoped storage and retrieval for all eight tools.
-5. Add consent, privacy notice, retention and deletion flows.
-6. Add owner-only aggregate analytics on the Russian backend.
-7. Keep third-party analytics disabled unless separately reviewed and approved.
-8. Test account isolation, authentication abuse limits, backups and restore before public launch.
+Counts describe tool usage, not business outcomes. They cannot show that YOUNOVAL improved a business or that the YBRM model predicts business survival. Report them as aggregate descriptive statistics and disclose the observation period and limitations.
