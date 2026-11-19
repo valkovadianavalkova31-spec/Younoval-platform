@@ -141,3 +141,20 @@ footer{justify-content:space-between;gap:24px}
 .hero-copy>.lead,
 .hero-copy>.micro{color:#20251f!important}
 .free-word{color:#789b45!important}
+
+
+/* Consistent light editorial typography across every page and section */
+h1,h2,h3,h4,h5,h6,
+.hero h1,.split h2,.closing h2,
+.card h3,.panel h3,.result-title h4,
+.result-section h5,.plan-item h5,.purpose-note h3,
+.theory-grid h3 {
+  font-family:var(--display)!important;
+  font-weight:300!important;
+  font-style:normal;
+}
+h1 em,h2 em,h3 em,h4 em,h5 em,h6 em {
+  font-family:var(--display)!important;
+  font-style:italic!important;
+  font-weight:300!important;
+}
