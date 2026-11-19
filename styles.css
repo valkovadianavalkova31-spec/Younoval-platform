@@ -113,3 +113,7 @@ footer{justify-content:space-between;gap:24px}
 .card>i{background:#edf0e9!important;color:#4d5846!important;border:1px solid #d8dfd1;border-radius:3px!important;font-size:15px!important}
 .card>i.lav,.card>i.peach,.card>i.blue,.card>i.yellow,.card>i.pink{background:#edf0e9!important}
 @media(max-width:620px){.result{padding:18px 14px}.result-section.solution{margin-left:-6px;margin-right:-6px;padding:16px 8px}.plan-item{padding:16px 0}}
+
+/* Footer privacy link after removing public contact block */
+.privacy-link{font-size:9px;color:#737b70;text-decoration:underline;text-underline-offset:3px;margin-left:24px}
+@media(max-width:620px){.privacy-link{margin-left:0;margin-top:8px}}
