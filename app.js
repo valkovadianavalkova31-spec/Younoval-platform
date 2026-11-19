@@ -211,7 +211,6 @@ box.innerHTML=html;box.classList.add("show");save({goal:focus,priorities:selecte
 const stored=JSON.parse(localStorage.getItem("yn-results")||"{}");
 const available=Object.keys(stored).filter(k=>k!=="plan");
 $("#planSource").textContent=lang==="ru"?(available.length?"Используются результаты: "+available.join(", ")+". Данные остаются только в этом браузере.":"Пока нет сохранённых диагностик. Пройдите хотя бы один инструмент, чтобы план опирался на ваши показатели."):(available.length?"Using saved results: "+available.join(", ")+". Data stays in this browser.":"No saved diagnostics yet. Complete at least one tool so the plan can use your own figures.");
-};
 }
 
 if($("#lang"))$("#lang").addEventListener("click",setLang);
