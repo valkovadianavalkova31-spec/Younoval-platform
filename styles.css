@@ -121,3 +121,23 @@ footer{justify-content:space-between;gap:24px}
 /* Hero headline: lighter weight with an elegant italic accent */
 .hero h1{font-weight:400}
 .hero h1 em{font-family:Georgia,"Times New Roman",serif!important;font-style:italic!important;font-weight:400!important;letter-spacing:-.045em;color:#758d4b!important}
+
+
+/* Corrected hero typography: light italic, with green reserved for FREE */
+.hero h1{
+  font-family:var(--display)!important;
+  font-weight:300!important;
+  color:#20251f!important;
+  -webkit-font-smoothing:antialiased;
+}
+.hero h1 em{
+  font-family:var(--display)!important;
+  font-style:italic!important;
+  font-weight:300!important;
+  color:#20251f!important;
+  letter-spacing:-.055em;
+}
+.hero-copy>.eyebrow,
+.hero-copy>.lead,
+.hero-copy>.micro{color:#20251f!important}
+.free-word{color:#789b45!important}
