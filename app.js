@@ -56,10 +56,112 @@ function input(id){const e=$("#"+id);return e&&e.value.trim()!==""?Number(e.valu
 function save(data){try{const all=JSON.parse(localStorage.getItem("yn-results")||"{}");all[active]={...data,date:new Date().toISOString()};localStorage.setItem("yn-results",JSON.stringify(all));savedStatus()}catch(e){toast(lang==="ru"?"Не удалось сохранить результат в этом браузере.":"Could not save results in this browser.")}}
 function savedStatus(){const all=JSON.parse(localStorage.getItem("yn-results")||"{}");$("#saved").textContent=Object.keys(all).length?tr("saved")+Object.keys(all).length:(lang==="en"?"Your results will appear here after you complete a tool.":"Здесь появятся результаты после прохождения инструмента.");$("#clear").textContent=lang==="en"?"Clear saved results":"Очистить результаты"}
 function escapeHTML(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function resultInsights(data){
+const ru=lang==="ru";
+let meaning="",benefit="",forecast="",metric="";
+if(active==="health"){
+const labels=tr("dims"),answers=data.answers||[],weak=answers.map((v,i)=>({v,i})).filter(x=>x.v<=1).map(x=>labels[x.i]);
+meaning=ru?"Индекс "+data.practiceIndex+"% показывает, насколько системно внедрены выбранные практики. Слабые направления: "+(weak.length?weak.join(", "):"критичных пробелов по самооценке не отмечено")+". Это оценка организации работы, а не вероятность успеха или закрытия бизнеса.":"The "+data.practiceIndex+"% index reflects how consistently selected practices are implemented. Weak areas: "+(weak.length?weak.join(", "):"no major gaps marked")+". This is an operating-practice score, not a probability of success or failure.";
+benefit=ru?"Если закрывать пробелы по одному, процессы станут более предсказуемыми: будет проще удерживать клиентов, контролировать деньги, повторять продажи и снижать зависимость от отдельных людей.":"Addressing gaps one at a time can make operations more predictable and reduce dependence on individual people.";
+forecast=ru?"Повторите оценку через 30–90 дней. Если практики действительно внедрены, изменится их регулярность и контрольные показатели. Если ничего не менять, отмеченные пробелы, вероятно, сохранятся. Индекс не предсказывает выручку или выживаемость.":"Repeat the assessment in 30–90 days. If practices are implemented, their consistency and related metrics should change. If nothing changes, the gaps are likely to remain. The index does not forecast revenue or survival.";
+metric=ru?"Повторные покупки, жалобы и потерянные клиенты; денежный остаток; ошибки и задержки; регулярность проверок.":"Repeat purchases, complaints, cash balance, errors, delays and review cadence.";
+}else if(active==="finance"){
+const net=data.netCashFlow,margin=data.unitMargin,runway=data.runwayMonths,be=data.breakEvenUnits;
+meaning=ru?"Месячный денежный поток: "+fmt(net)+". Маржинальный доход на единицу: "+fmt(margin)+". "+(net<0?"Поступлений не хватает на выплаты; расчётный запас денег при неизменном дефиците: "+(runway===null?"не определён":fmt(runway)+" мес.")+".":"По введённым данным поток не отрицательный, но это ещё не подтверждает чистую прибыль.")+" Точка безубыточности: "+(be===null?"не рассчитывается при нулевой или отрицательной марже":fmt(be)+" ед./мес.")+".":"Monthly cash flow: "+fmt(net)+". Contribution per unit: "+fmt(margin)+". "+(net<0?"Inflows do not cover outflows; estimated runway at the same deficit: "+(runway===null?"unavailable":fmt(runway)+" months")+".":"Entered figures do not show negative cash flow, but do not prove net profitability.")+" Break-even: "+(be===null?"not calculable with zero or negative contribution":fmt(be)+" units/month")+".";
+benefit=ru?(margin<=0?"Сначала исправьте экономику каждой продажи: рост объёма при отрицательной марже увеличивает нагрузку.":net<0?"Главная цель — сократить кассовый разрыв и выиграть время для корректировки расходов и поступлений.":"Следующая задача — подтвердить устойчивость положительного потока с учётом сезонности, налогов и всех расходов."):"First improve unit economics and cash visibility, then test whether positive cash flow holds after seasonality, taxes and all costs.";
+forecast=ru?(net<0?"Если сохранить текущий дефицит, денежный резерв будет сокращаться. Оценка запаса действует только при неизменном дефиците. После изменений пересчитывайте 13-недельный прогноз еженедельно.":"Если поступления и выплаты останутся на сопоставимом уровне, поток может сохраняться положительным. При изменении продаж или расходов сценарий нужно пересчитать."):(net<0?"If the current deficit continues, cash reserves will decline. Runway assumes the same deficit; update a 13-week forecast weekly.":"If inflows and outflows remain comparable, cash flow may stay positive. Recalculate when sales or costs change.");
+metric=ru?"Чистый поток, минимальный остаток денег, маржа на единицу и продажи относительно точки безубыточности.":"Net cash flow, minimum cash balance, contribution per unit and sales versus break-even.";
+}else if(active==="marketing"){
+const cac=data.cac,aov=data.averageOrderValue,roas=data.roas,conv=data.conversionRate;
+meaning=ru?"CAC: "+(cac===null?"не рассчитан":fmt(cac))+"; конверсия в заказ: "+(conv===null?"не рассчитана":fmt(conv)+"%")+"; средняя выручка на заказ: "+(aov===null?"не рассчитана":fmt(aov))+"; ROAS: "+(roas===null?"не рассчитан":fmt(roas)+"×")+". ROAS не учитывает себестоимость и не равен прибыли.":"CAC: "+(cac===null?"not calculated":fmt(cac))+"; order conversion: "+(conv===null?"not calculated":fmt(conv)+"%")+"; average order revenue: "+(aov===null?"not calculated":fmt(aov))+"; ROAS: "+(roas===null?"not calculated":fmt(roas)+"×")+". ROAS excludes costs and is not profit.";
+benefit=ru?"Разделение результатов по каналам покажет, где теряются клиенты и какие кампании стоит тестировать дальше. Добавьте валовую маржу и повторные покупки, чтобы оценивать окупаемость, а не только выручку.":"Channel-level results show where customers drop out. Add gross margin and repeat purchases to assess payback, not just revenue.";
+forecast=ru?"Если измерять воронку и менять по одной переменной за тест, через несколько циклов появится база для решений о бюджете. Масштабирование только по ROAS может увеличить расходы без роста прибыли.":"Measuring the funnel and changing one variable per test creates evidence for budget decisions. Scaling on ROAS alone can increase spend without profit.";
+metric=ru?"CAC и срок окупаемости, конверсия каждого этапа, повторные покупки и прибыль после рекламы.":"CAC payback, funnel conversion, repeat purchases and profit after advertising.";
+}else if(active==="market"){
+meaning=ru?"Подтверждены "+data.supportedSignals+" из "+data.totalChecks+" проверочных сигналов ("+data.validationIndex+"%). Это индекс выполненных проверок, а не вероятность успеха идеи. Непроверенные этапы требуют фактов от клиентов.":"You marked "+data.supportedSignals+" of "+data.totalChecks+" validation signals as supported ("+data.validationIndex+"%). This is a completion index, not the probability the idea will succeed. Unverified stages need customer evidence.";
+benefit=ru?"Проверка проблемы, спроса, конкурентов и готовности платить снижает риск вложить ресурсы до получения реальных рыночных сигналов.":"Testing the problem, demand, competition and willingness to pay reduces the risk of committing resources before market evidence exists.";
+forecast=ru?"После интервью, теста предложения и первых платных пилотов можно решить: продолжать, менять аудиторию или предложение либо остановить гипотезу. Без проверок интерес остаётся предположением.":"After interviews, an offer test and paid pilots, decide whether to continue, change the audience or offer, or stop the hypothesis. Without tests, interest remains an assumption.";
+metric=ru?"Интервью, квалифицированные заявки, предзаказы, оплаты, конверсия и повторный спрос.":"Interviews, qualified leads, pre-orders, payments, conversion and repeat demand.";
+}else if(active==="risk"){
+const risks=(data.risks||[]).slice().sort((a,b)=>b.score-a.score),top=risks[0];
+meaning=ru?"Самый высокий отмеченный риск: "+(top?top.name+" — "+top.score+"/25":"не определён")+". Высокий балл означает приоритет подготовки, а не точную вероятность события.":"Highest rated risk: "+(top?top.name+" — "+top.score+"/25":"not available")+". A high score means mitigation deserves priority; it is not an exact event probability.";
+benefit=ru?"Ответственные, ранние сигналы и заранее проверенные сценарии помогают быстрее реагировать и ограничивать последствия, если риск реализуется.":"Owners, early-warning signals and tested response plans help the business react faster and limit disruption.";
+forecast=ru?"Риск не исчезает от наличия плана. Пересматривайте оценки после изменений в спросе, финансах, поставках или команде и проверяйте готовность сценарными учениями.":"A risk does not disappear just because a plan exists. Reassess after changes in demand, finances, suppliers or the team, and test readiness.";
+metric=ru?"У каждого приоритетного риска есть владелец, ранний сигнал, срок реакции и проверенная мера.":"Each priority risk has an owner, early-warning signal, response deadline and tested mitigation.";
+}else{
+const labels=active==="operations"?tr("opsQs"):tr("adaptQs"),answers=data.answers||[],weak=answers.map((v,i)=>({v,i})).filter(x=>x.v<=1).map(x=>labels[x.i]);
+meaning=ru?(active==="operations"?"Проверка оценивает ясность процессов, роли, поставщиков и непрерывность работы.":"Проверка оценивает, насколько регулярно бизнес замечает изменения, собирает обратную связь и тестирует решения.")+" Слабые пункты: "+(weak.length?weak.join("; "):"существенных пробелов по ответам не отмечено")+".":"The assessment checks "+(active==="operations"?"process clarity, roles, suppliers and continuity.":"how consistently the business monitors change, collects feedback and tests decisions.")+" Weak items: "+(weak.length?weak.join("; "):"no major gaps marked")+".";
+benefit=ru?(active==="operations"?"Документированные процессы и резервные исполнители помогают сокращать задержки, ошибки и зависимость от одного человека.":"Регулярные сигналы и небольшие эксперименты помогают замечать изменения и проверять решения до масштабирования."):(active==="operations"?"Documented processes and backup owners help reduce delays, errors and dependence on one person.":"Regular signals and small experiments help detect change and test decisions before scaling.");
+forecast=ru?(active==="operations"?"После внедрения чек-листов сравните время выполнения, ошибки и сбои до и после. Непроверенные инструкции могут остаться формальностью.":"Регулярные обзоры и журнал экспериментов постепенно создают фактическую базу решений. Без обзора важные сигналы могут остаться незамеченными."):(active==="operations"?"After checklists are introduced, compare completion time, errors and disruptions. Untested instructions may remain a formality.":"Regular reviews and experiment logs build evidence for decisions. Without reviews, important signals may be missed.");
+metric=ru?(active==="operations"?"Время выполнения, ошибки, задержки, простои и задачи с резервным исполнителем.":"Время от сигнала до решения, число проверенных гипотез и экспериментов с выводами."):(active==="operations"?"Completion time, errors, delays, downtime and tasks with a backup owner.":"Time from signal to decision, hypotheses tested and experiments with documented conclusions.");
+}
+return {meaning,benefit,forecast,metric};
+}
+function stepDetails(index){
+const sets={
+health:[
+["Понять причины покупок и отказов, а не строить догадки.","Более точное предложение и меньше потерянных обращений.","Причины отказов, повторные покупки и обращения."],
+["Видеть деньги заранее и замечать дефицит до даты платежа.","Меньше неожиданных кассовых разрывов и просрочек.","Прогноз и факт остатка каждую неделю."],
+["Понять, какие каналы приводят покупателей, а не только просмотры.","Бюджет направляется на каналы с подтверждёнными продажами.","CAC, валовая прибыль и конверсия по каждому каналу."],
+["Сделать ключевую работу повторяемой и понятной другим людям.","Меньше ошибок, задержек и зависимости от одного исполнителя.","Время процесса и количество повторных ошибок."],
+["Замечать изменения и проверять новые решения небольшими тестами.","Быстрее адаптация без крупных необоснованных вложений.","Сигналы рынка и результат экспериментов."],
+["Снизить риск потери данных и хаоса в инструментах.","Надёжнее доступы, данные и повседневный учёт.","Успешное восстановление копии и число ошибок."]
+],
+finance:[
+["Понять, покрывает ли цена прямые затраты на продажу.","Не наращивать объём продаж с отрицательной маржой.","Маржа после переменных затрат."],
+["Увидеть даты, когда поступления не совпадают с выплатами.","Раньше выявлять дефицит и договариваться о сроках платежей.","Минимальный остаток денег в 13-недельном прогнозе."],
+["Ускорить поступление денег и проверить управляемые расходы.","Сократить кассовый разрыв без необдуманного ущерба качеству.","Просроченная дебиторская задолженность и срок оплаты."],
+["Сравнить фактические продажи с необходимыми для покрытия постоянных затрат.","Понять разрыв до безубыточности.","Проданные единицы относительно точки безубыточности."],
+["Сверять прогноз с фактом и моделировать снижение поступлений.","Быстрее замечать отклонения и корректировать план.","Точность прогноза и минимальный денежный остаток."]
+],
+marketing:[
+["Найти этап воронки, где теряется больше всего клиентов.","Улучшать конкретный этап вместо увеличения бюджета вслепую.","Конверсия между этапами."],
+["Разделить кампании и понять вклад каждого канала.","Сравнимые данные для распределения бюджета.","Расходы, заказы и выручка по источникам."],
+["Проверить окупаемость привлечения с учётом маржи и повторных покупок.","Не масштабировать кампании без подтверждённой экономики.","Валовая прибыль на клиента и срок окупаемости CAC."],
+["Проверить одну гипотезу за раз.","Понять влияние аудитории, креатива или предложения.","Результат теста против заранее заданного критерия."],
+["Добавить данные о себестоимости и возвратах.","Оценивать прибыльность рекламы, а не только оборот.","Прибыль после рекламы."]
+],
+market:[
+["Убедиться, что проблема существует в реальной жизни аудитории.","Не тратить ресурсы на решение неважной проблемы.","Повторяемость проблемы в интервью."],
+["Понять частоту и стоимость проблемы для сегмента.","Выбрать аудиторию с более сильной потребностью.","Частота проблемы и текущие затраты клиента."],
+["Проверить действие клиента, а не только интерес.","Получить сигнал спроса через заявки, предзаказы или оплаты.","Конверсия в квалифицированные заявки и оплаты."],
+["Увидеть альтернативы и причину выбора вашего продукта.","Сформулировать проверяемое отличие от конкурентов.","Причины выбора и отказа."],
+["Проверить предложение на ограниченной выборке.","Снизить стоимость ошибки и уточнить продукт.","Порог заявок или оплат, заданный до теста."],
+["Проверить готовность платить и повторную ценность.","Понять, есть ли основа для устойчивой модели.","Оплаты, возвраты и повторные покупки."]
+],
+risk:[
+["Проверить концентрацию выручки и признаки ухода клиентов.","Снизить зависимость от одного клиента.","Доля крупнейшего клиента и его активность."],
+["Увидеть дефицит до наступления обязательных платежей.","Снизить вероятность кассового разрыва.","Даты поступлений, платежей и минимальный остаток."],
+["Подготовить альтернативу на случай сбоя поставок.","Сократить простой и задержку заказов.","Срок переключения на резервного поставщика."],
+["Защитить доступы и возможность восстановить данные.","Снизить последствия потери аккаунта или информации.","MFA и тест восстановления."],
+["Снизить зависимость задач от одного человека.","Сохранить работу при его временном отсутствии.","Число критичных задач с обученным заместителем."]
+],
+operations:[
+["Найти узкое место и сделать последовательность работы понятной.","Меньше ожидания и повторной передачи задач.","Время цикла и число задержек."],
+["Подготовить замену критичному поставщику.","Меньше риска остановки из-за одного подрядчика.","Срок и стоимость переключения."],
+["Проверять качество до передачи результата клиенту.","Меньше возвратов и затрат на исправление.","Дефекты, возвраты и переделки."],
+["Передать знания и назначить резервного исполнителя.","Работа не останавливается при отсутствии одного человека.","Доля критичных задач с заместителем."],
+["Подготовить ответ на типовые сбои.","Быстрее восстановление и понятнее коммуникация.","Время реакции и восстановления."],
+["Упорядочить доступы, документы и резервные копии.","Меньше риска потери информации.","Успешность восстановления и актуальность реестра."]
+],
+adapt:[
+["Замечать изменения, которые влияют на спрос и экономику.","Раньше корректировать предложение и бюджет.","Частота обзора и число замеченных сигналов."],
+["Понять, почему клиенты покупают, отказываются или уходят.","Улучшения направлены на реальные причины.","Повторяющиеся причины отказа и жалоб."],
+["Проверять гипотезы малым экспериментом.","Снижать стоимость неудачных решений.","Доля тестов с заранее заданным критерием."],
+["Связывать факты, решение и результат.","Меньше повторения одних и тех же ошибок.","Доля решений с датой пересмотра."],
+["Превращать результаты тестов в знания команды.","Удачные практики легче повторять.","Эксперименты с зафиксированными выводами."],
+["Внедрять цифровые инструменты под конкретную проблему.","Экономить время и снижать ошибки.","Время процесса и ошибки до/после."]
+]
+};
+const ru=lang==="ru",item=(sets[active]||[])[index];
+if(!item)return {why:ru?"Этот шаг помогает устранить выявленный пробел.":"This step addresses the identified gap.",gain:ru?"Ожидаемый эффект — более управляемый процесс и меньше неопределённости.":"Expected benefit: a more manageable process and less uncertainty.",check:ru?"Сравните показатель до и после выполнения шага.":"Compare the metric before and after the step."};
+return {why:item[0],gain:item[1],check:item[2]};
+}
 function result(title,metrics,analysis,actions,data,percent){
-const box=$("#result");
+const box=$("#result"),insights=resultInsights(data);
 const list=items=>'<ul>'+items.map(x=>'<li>'+escapeHTML(x)+'</li>').join("")+'</ul>';
-box.innerHTML='<div class="result-title"><h4>'+escapeHTML(title)+'</h4></div><div class="metrics">'+metrics.map(m=>'<div><strong>'+escapeHTML(m[0])+'</strong><small>'+escapeHTML(m[1])+'</small></div>').join("")+'</div>'+(percent===undefined?"":'<div class="bar"><span style="width:'+Math.max(0,Math.min(100,percent))+'%"></span></div>')+'<section class="result-section"><h5>'+(lang==="ru"?"Подробный анализ":"Detailed analysis")+'</h5>'+list(analysis)+'</section><section class="result-section solution"><h5>'+(lang==="ru"?"Что делать: пошаговое решение":"What to do: step-by-step solution")+'</h5>'+list(actions)+'</section><p class="result-disclaimer">'+tr("notPrediction")+'</p>';
+const steps=actions.map((action,i)=>{const d=stepDetails(i),when=i===0?(lang==="ru"?"Сначала · первые 3–7 дней":"First · days 1–7"):i===1?(lang==="ru"?"Затем · неделя 1–2":"Next · week 1–2"):i===2?(lang==="ru"?"Далее · в течение месяца":"Then · within the month"):(lang==="ru"?"После проверки предыдущего шага":"After reviewing the previous step");return '<article class="action-step"><div class="action-step-top"><span>'+(lang==="ru"?"ШАГ ":"STEP ")+(i+1)+'</span><small>'+when+'</small></div><p class="action-main">'+escapeHTML(action)+'</p><div class="action-meta"><p><b>'+(lang==="ru"?"Зачем: ":"Why: ")+'</b>'+escapeHTML(d.why)+'</p><p><b>'+(lang==="ru"?"Что это даст: ":"Expected benefit: ")+'</b>'+escapeHTML(d.gain)+'</p><p><b>'+(lang==="ru"?"Как проверить улучшение: ":"How to measure: ")+'</b>'+escapeHTML(d.check)+'</p></div></article>'}).join("");
+box.innerHTML='<div class="result-title"><h4>'+escapeHTML(title)+'</h4></div><div class="metrics">'+metrics.map(m=>'<div><strong>'+escapeHTML(m[0])+'</strong><small>'+escapeHTML(m[1])+'</small></div>').join("")+'</div>'+(percent===undefined?"":'<div class="bar"><span style="width:'+Math.max(0,Math.min(100,percent))+'%"></span></div>')+'<section class="result-section"><h5>'+(lang==="ru"?"Что показал анализ":"What the analysis shows")+'</h5><p>'+escapeHTML(insights.meaning)+'</p>'+list(analysis)+'</section><section class="result-section"><h5>'+(lang==="ru"?"Что может улучшиться":"What can improve")+'</h5><p>'+escapeHTML(insights.benefit)+'</p><p><b>'+(lang==="ru"?"Контрольные показатели: ":"Metrics to track: ")+'</b>'+escapeHTML(insights.metric)+'</p></section><section class="result-section solution"><h5>'+(lang==="ru"?"Пошаговый план действий":"Step-by-step action plan")+'</h5>'+steps+'</section><section class="result-section forecast"><h5>'+(lang==="ru"?"Прогноз и сценарии на будущее":"Outlook and future scenarios")+'</h5><p>'+escapeHTML(insights.forecast)+'</p><p class="result-disclaimer">'+(lang==="ru"?"Сценарий основан только на введённых данных и не является гарантией результата. Обновляйте анализ по мере появления новых фактов.":"This scenario is based only on the data entered and is not a guarantee. Update the analysis as new evidence becomes available.")+'</p></section><p class="result-disclaimer">'+tr("notPrediction")+'</p>';
 box.classList.add("show");save(data);trackToolStarted();track("tool_completed")
 }
 function toast(msg){const el=$("#toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2200)}
