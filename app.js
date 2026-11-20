@@ -335,6 +335,6 @@ $("#planSource").textContent=lang==="ru"?(available.length?"Используют
 
 if($("#lang"))$("#lang").addEventListener("click",setLang);
 $$("[data-tab]").forEach(b=>b.addEventListener("click",()=>{render(b.dataset.tab);trackToolStarted()}));
-$$("[data-tool]").forEach(b=>b.addEventListener("click",()=>{render(b.dataset.tool);trackToolStarted();$("#workspace").scrollIntoView({behavior:"smooth"})}));
+document.addEventListener("click",event=>{const button=event.target.closest("button[data-tool]");if(!button)return;const tool=button.dataset.tool;if(!names.includes(tool))return;event.preventDefault();render(tool);trackToolStarted();const workspace=$("#workspace");if(workspace)workspace.scrollIntoView({behavior:"smooth",block:"start"});});
 $("#clear").addEventListener("click",()=>{localStorage.removeItem("yn-results");savedStatus();toast(tr("clear"))});
 translate();
