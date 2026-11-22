@@ -173,3 +173,28 @@ h1 em,h2 em,h3 em,h4 em,h5 em,h6 em {
 .result-section.forecast{background:#f1f4eb;border:1px solid #e2e8d9;border-radius:7px;padding:16px 18px;margin-top:14px}
 .plan-impact{background:#f3f5ef;border-radius:6px;padding:12px 14px;margin:12px 0 18px;display:grid;gap:7px}
 @media(max-width:700px){.action-meta{grid-template-columns:1fr}.action-step{padding:13px}.action-step-top{align-items:flex-start;flex-direction:column;gap:4px}}
+
+/* Expanded project overview: audience, problem, workflow and scope */
+.project-details{padding:96px 0 104px}
+.project-details-intro{display:grid;grid-template-columns:1fr .8fr;gap:12%;align-items:end;margin:34px 0 38px}
+.project-details-intro h2{font:300 clamp(38px,4.8vw,58px)/1.04 var(--display);letter-spacing:-.065em;margin:0}
+.project-details-intro h2 em{color:var(--green)}
+.project-details-intro>p{font-size:13px;line-height:1.85;color:#626c5d;margin:0}
+.project-details-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.project-details-grid article{padding:25px 25px 28px 0}
+.project-details-grid article+article{border-left:1px solid var(--line);padding-left:25px}
+.project-details-grid span,.project-details-foot strong{font-size:9px;letter-spacing:.12em;color:#82916f;font-weight:700}
+.project-details-grid h3{font-size:21px;margin:22px 0 10px}
+.project-details-grid p,.project-details-foot p{font-size:11px;line-height:1.85;color:#697363;margin:0}
+.project-details-foot{display:grid;grid-template-columns:1fr 2fr;gap:12%;padding:24px;background:#e8ece2;margin-top:18px}
+.theory-note{font-size:10px;line-height:1.8;color:#778171;margin:22px 0 0;max-width:900px}
+@media(max-width:620px){
+ .project-details{padding:72px 0}
+ .project-details-intro{grid-template-columns:1fr;gap:16px;margin:28px 0}
+ .project-details-intro h2{font-size:43px}
+ .project-details-grid{grid-template-columns:1fr}
+ .project-details-grid article{padding:21px 0}
+ .project-details-grid article+article{border-left:0;border-top:1px solid var(--line);padding-left:0}
+ .project-details-grid h3{margin:13px 0 8px}
+ .project-details-foot{grid-template-columns:1fr;gap:10px;padding:19px}
+}
